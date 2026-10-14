@@ -81,7 +81,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         }}
         className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md hover:bg-white/10 hover:text-white transition-colors text-left"
       >
-        <Play size={14} className="text-emerald-400" />
+        <Play size={14} className="text-brand-400" />
         <span>Play Now</span>
       </button>
 

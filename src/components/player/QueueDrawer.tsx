@@ -41,7 +41,7 @@ export const QueueDrawer: React.FC<QueueDrawerProps> = ({
       {/* Header */}
       <div className="h-14 px-4 border-b border-white/10 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
-          <ListMusic size={18} className="text-emerald-400" />
+          <ListMusic size={18} className="text-brand-400" />
           <h2 className="font-semibold text-neutral-100 text-sm">Play Queue</h2>
           <span className="text-xs text-neutral-500 tabular-nums">({queue.length})</span>
         </div>
@@ -84,12 +84,12 @@ export const QueueDrawer: React.FC<QueueDrawerProps> = ({
                 size="md"
               />
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-emerald-400 truncate">
+                <p className="text-sm font-semibold text-brand-400 truncate">
                   {currentTrack.title}
                 </p>
                 <p className="text-xs text-neutral-400 truncate mt-0.5">{currentTrack.artist}</p>
               </div>
-              <div className="text-xs text-emerald-400 flex items-center gap-1">
+              <div className="text-xs text-brand-400 flex items-center gap-1">
                 {isPlaying && <Volume2 size={14} className="animate-pulse" />}
                 <span className="font-mono tabular-nums">{formatTime(currentTrack.duration)}</span>
               </div>

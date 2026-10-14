@@ -63,9 +63,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="h-14 flex items-center justify-between px-4 border-b border-white/5 shrink-0">
         {!isCollapsed && (
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-              <span className="text-emerald-400 font-bold text-sm">N</span>
-            </div>
+            <img
+              src="/yaswave-mark.png"
+              alt="YASWAVE"
+              className="w-7 h-7 object-contain drop-shadow-[0_0_6px_rgba(25,190,190,0.35)]"
+            />
             <span className="font-bold text-neutral-100 tracking-tight text-base">
               {APP_CONFIG.name}
             </span>
@@ -94,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }`}
           title="Home"
         >
-          <Home size={18} className={activeView === 'home' ? 'text-emerald-400' : ''} />
+          <Home size={18} className={activeView === 'home' ? 'text-brand-400' : ''} />
           {!isCollapsed && <span>Home</span>}
         </button>
 
@@ -107,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }`}
           title="Search (Ctrl+F)"
         >
-          <Search size={18} className={activeView === 'search' ? 'text-emerald-400' : ''} />
+          <Search size={18} className={activeView === 'search' ? 'text-brand-400' : ''} />
           {!isCollapsed && <span>Search</span>}
         </button>
 
@@ -120,7 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }`}
           title="Your Library"
         >
-          <Library size={18} className={activeView === 'library' ? 'text-emerald-400' : ''} />
+          <Library size={18} className={activeView === 'library' ? 'text-brand-400' : ''} />
           {!isCollapsed && <span>Your Library</span>}
         </button>
       </div>
@@ -151,7 +153,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }`}
           title="Recently Played"
         >
-          <History size={18} className={activeView === 'recently_played' ? 'text-emerald-400' : ''} />
+          <History size={18} className={activeView === 'recently_played' ? 'text-brand-400' : ''} />
           {!isCollapsed && <span>Recently Played</span>}
         </button>
       </div>
@@ -167,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {onOpenSmartPlaylist && (
                 <button
                   onClick={onOpenSmartPlaylist}
-                  className="p-1 rounded hover:bg-emerald-500/20 text-neutral-400 hover:text-emerald-400 transition-colors"
+                  className="p-1 rounded hover:bg-brand-500/20 text-neutral-400 hover:text-brand-400 transition-colors"
                   title="Create Smart Playlist (Rule-based)"
                 >
                   <Sparkles size={14} />
@@ -204,15 +206,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     size={15}
                     className={
                       isSelected
-                        ? 'text-emerald-400 shrink-0'
-                        : 'text-emerald-400/80 shrink-0'
+                        ? 'text-brand-400 shrink-0'
+                        : 'text-brand-400/80 shrink-0'
                     }
                   />
                 ) : (
                   <ListMusic
                     size={16}
                     className={
-                      isSelected ? 'text-emerald-400 shrink-0' : 'text-neutral-500 shrink-0'
+                      isSelected ? 'text-brand-400 shrink-0' : 'text-neutral-500 shrink-0'
                     }
                   />
                 )}
@@ -227,7 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="p-2 border-t border-white/5 space-y-1 shrink-0">
         <button
           onClick={onOpenImportModal}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-white/5 hover:bg-white/10 text-emerald-400 hover:text-emerald-300 ${
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-white/5 hover:bg-white/10 text-brand-400 hover:text-brand-300 ${
             isCollapsed ? 'justify-center px-0' : ''
           }`}
           title="Import Local Music"
@@ -245,7 +247,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           } ${isCollapsed ? 'justify-center px-0' : ''}`}
           title="Settings"
         >
-          <Settings size={18} className={activeView === 'settings' ? 'text-emerald-400' : ''} />
+          <Settings size={18} className={activeView === 'settings' ? 'text-brand-400' : ''} />
           {!isCollapsed && <span>Settings</span>}
         </button>
 

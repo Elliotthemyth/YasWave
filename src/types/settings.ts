@@ -1,5 +1,5 @@
 export type AppTheme = 'dark' | 'light' | 'oled';
-export type AccentColor = 'emerald' | 'violet' | 'cyan' | 'amber' | 'rose' | 'monochrome';
+export type AccentColor = 'brand' | 'violet' | 'cyan' | 'amber' | 'rose' | 'monochrome';
 export type UIDensity = 'compact' | 'normal' | 'relaxed';
 
 export interface UserPreferences {
@@ -19,7 +19,7 @@ export interface UserPreferences {
 
 export const DEFAULT_PREFERENCES: UserPreferences = {
   theme: 'dark',
-  accentColor: 'emerald',
+  accentColor: 'brand',
   density: 'normal',
   defaultVolume: 0.8,
   rememberPlaybackPosition: true,

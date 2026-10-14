@@ -114,7 +114,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         {/* Header */}
         <div className="h-16 px-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <div className="w-8 h-8 rounded-lg bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-brand-400">
               <FolderDown size={18} />
             </div>
             <div>
@@ -141,11 +141,11 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             onDrop={handleDrop}
             className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center transition-all ${
               isDragging
-                ? 'border-emerald-500 bg-emerald-500/10 scale-[1.01]'
+                ? 'border-brand-500 bg-brand-500/10 scale-[1.01]'
                 : 'border-white/15 bg-neutral-950/40 hover:border-white/30'
             }`}
           >
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-emerald-400 mb-3 shadow-inner">
+            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-brand-400 mb-3 shadow-inner">
               <FileAudio size={24} />
             </div>
 
@@ -160,7 +160,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               <button
                 onClick={handleSelectFiles}
                 disabled={isImporting}
-                className="px-4 py-2 rounded-lg bg-emerald-500 text-neutral-950 font-semibold text-xs hover:bg-emerald-400 flex items-center gap-2 shadow transition-all active:scale-95 disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-brand-500 text-neutral-950 font-semibold text-xs hover:bg-brand-400 flex items-center gap-2 shadow transition-all active:scale-95 disabled:opacity-50"
               >
                 <FileAudio size={14} />
                 <span>Select Files</span>
@@ -179,9 +179,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
           {/* Import progress state */}
           {isImporting && importProgress && (
-            <div className="p-4 rounded-xl bg-neutral-950 border border-emerald-500/30 space-y-2">
+            <div className="p-4 rounded-xl bg-neutral-950 border border-brand-500/30 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-emerald-400 font-medium">
+                <span className="flex items-center gap-2 text-brand-400 font-medium">
                   <Loader2 size={13} className="animate-spin" />
                   Reading ID3 metadata...
                 </span>
@@ -191,7 +191,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               </div>
               <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-emerald-500 transition-all duration-150"
+                  className="h-full bg-brand-500 transition-all duration-150"
                   style={{
                     width: `${Math.round((importProgress.current / importProgress.total) * 100)}%`,
                   }}
@@ -206,7 +206,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           {/* Architecture notice: Browser Preview vs Native Tauri 2 Linux Packaging */}
           <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-xs text-neutral-400 space-y-2">
             <div className="flex items-center gap-2 text-neutral-200 font-semibold">
-              <HardDrive size={15} className="text-emerald-400" />
+              <HardDrive size={15} className="text-brand-400" />
               <span>Storage & Architecture Strategy</span>
             </div>
             <p className="leading-relaxed">
@@ -225,7 +225,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         {/* Footer */}
         <div className="px-6 py-3.5 bg-neutral-950/60 border-t border-white/10 flex items-center justify-between text-xs text-neutral-500">
           <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={13} className="text-emerald-400" />
+            <CheckCircle2 size={13} className="text-brand-400" />
             <span>Zero cloud uploads · 100% private & local playback</span>
           </div>
 

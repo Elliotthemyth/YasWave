@@ -51,7 +51,7 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={() => onPlayTrack(favoriteTracks[0], favoriteTracks)}
-              className="w-12 h-12 rounded-full bg-emerald-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-xl transition-transform"
+              className="w-12 h-12 rounded-full bg-brand-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-xl transition-transform"
               title="Play All Favorites"
             >
               <Play size={22} className="fill-current ml-0.5" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Disc3, Minus, Square, X } from 'lucide-react';
+import { Minus, Square, X } from 'lucide-react';
 import { APP_CONFIG } from '../../config/appConfig';
 
 interface DesktopTitleBarProps {
@@ -24,7 +24,7 @@ export const DesktopTitleBar: React.FC<DesktopTitleBarProps> = ({
     >
       {/* App brand & icon */}
       <div className="flex items-center gap-2">
-        <Disc3 size={14} className="text-emerald-400 animate-spin-slow" />
+        <img src="/yaswave-mark.png" alt="" className="h-4 w-4 object-contain" />
         <span className="font-semibold text-neutral-200 tracking-wide">{APP_CONFIG.name}</span>
         <span className="text-[10px] text-neutral-500 hidden sm:inline">· {APP_CONFIG.tagline}</span>
       </div>
@@ -32,7 +32,7 @@ export const DesktopTitleBar: React.FC<DesktopTitleBarProps> = ({
       {/* Center environment badge */}
       <div className="hidden md:flex items-center gap-3 text-[11px] text-neutral-500">
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/80" />
+          <span className="w-1.5 h-1.5 rounded-full bg-brand-500/80" />
           <span>{isTauri ? 'Linux Desktop Native (Tauri)' : 'Linux Preview Mode'}</span>
         </div>
       </div>

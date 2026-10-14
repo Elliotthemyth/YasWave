@@ -50,11 +50,11 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 pb-6 border-b border-white/10">
         <div className="flex items-center gap-5">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-900 flex items-center justify-center text-white shadow-xl border border-white/10">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-600 to-teal-900 flex items-center justify-center text-white shadow-xl border border-white/10">
             <LibraryIcon size={36} />
           </div>
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-400">
               Collection
             </span>
             <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">Your Library</h1>
@@ -70,7 +70,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
             <>
               <button
                 onClick={() => onPlayTrack(tracks[0], tracks)}
-                className="w-11 h-11 rounded-full bg-emerald-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-lg transition-transform"
+                className="w-11 h-11 rounded-full bg-brand-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-lg transition-transform"
                 title="Play All"
               >
                 <Play size={20} className="fill-current ml-0.5" />
@@ -90,7 +90,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
             onClick={onOpenImportModal}
             className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-medium text-xs flex items-center gap-2 border border-white/10 shadow-sm transition-all"
           >
-            <FolderDown size={14} className="text-emerald-400" />
+            <FolderDown size={14} className="text-brand-400" />
             <span>Import Music</span>
           </button>
         </div>

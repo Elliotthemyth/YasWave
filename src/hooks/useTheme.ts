@@ -31,7 +31,7 @@ export function useTheme() {
     }
 
     // Set accent color tokens
-    const accent = APP_CONFIG.accentColors[preferences.accentColor] || APP_CONFIG.accentColors.emerald;
+    const accent = APP_CONFIG.accentColors[preferences.accentColor] || APP_CONFIG.accentColors.brand;
     root.style.setProperty('--accent-primary', accent.primary);
     root.style.setProperty('--accent-hover', accent.hover);
     root.style.setProperty('--accent-glow', accent.glow);
@@ -49,7 +49,7 @@ export function useTheme() {
   const setAccentColor = useCallback((accentColor: AccentColor) => updatePreferences({ accentColor }), [updatePreferences]);
   const setDensity = useCallback((density: UIDensity) => updatePreferences({ density }), [updatePreferences]);
 
-  const activeAccent = APP_CONFIG.accentColors[preferences.accentColor] || APP_CONFIG.accentColors.emerald;
+  const activeAccent = APP_CONFIG.accentColors[preferences.accentColor] || APP_CONFIG.accentColors.brand;
 
   return {
     preferences,

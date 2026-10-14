@@ -216,7 +216,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
   const renderPresetIcon = (iconName: string) => {
     switch (iconName) {
       case 'Clock':
-        return <Clock size={18} className="text-emerald-400" />;
+        return <Clock size={18} className="text-brand-400" />;
       case 'Flame':
         return <Flame size={18} className="text-amber-400" />;
       case 'Compass':
@@ -230,7 +230,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
       case 'Hourglass':
         return <Hourglass size={18} className="text-indigo-400" />;
       default:
-        return <Sparkles size={18} className="text-emerald-400" />;
+        return <Sparkles size={18} className="text-brand-400" />;
     }
   };
 
@@ -246,7 +246,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
         {/* Header */}
         <div className="h-16 px-6 border-b border-white/10 flex items-center justify-between shrink-0 bg-neutral-900/80 backdrop-blur">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/40 flex items-center justify-center text-brand-400 shadow-sm">
               <Sparkles size={18} />
             </div>
             <div>
@@ -273,11 +273,11 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
             onClick={() => setActiveTab('presets')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-lg transition-colors flex items-center gap-2 border-b-2 ${
               activeTab === 'presets'
-                ? 'border-emerald-400 text-white bg-white/5'
+                ? 'border-brand-400 text-white bg-white/5'
                 : 'border-transparent text-neutral-400 hover:text-neutral-200'
             }`}
           >
-            <Sparkles size={14} className={activeTab === 'presets' ? 'text-emerald-400' : ''} />
+            <Sparkles size={14} className={activeTab === 'presets' ? 'text-brand-400' : ''} />
             <span>Quick Presets</span>
           </button>
 
@@ -286,11 +286,11 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
             onClick={() => setActiveTab('custom')}
             className={`px-4 py-2 text-xs font-semibold rounded-t-lg transition-colors flex items-center gap-2 border-b-2 ${
               activeTab === 'custom'
-                ? 'border-emerald-400 text-white bg-white/5'
+                ? 'border-brand-400 text-white bg-white/5'
                 : 'border-transparent text-neutral-400 hover:text-neutral-200'
             }`}
           >
-            <Layers size={14} className={activeTab === 'custom' ? 'text-emerald-400' : ''} />
+            <Layers size={14} className={activeTab === 'custom' ? 'text-brand-400' : ''} />
             <span>Rule Builder ({rules.length})</span>
           </button>
         </div>
@@ -308,7 +308,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Recently Added, Electronic Haven"
-                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3.5 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3.5 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-brand-500/50"
                 required
               />
             </div>
@@ -322,7 +322,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Brief summary of this dynamic playlist..."
-                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3.5 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3.5 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-brand-500/50"
               />
             </div>
           </div>
@@ -349,7 +349,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                       onClick={() => applyPreset(preset)}
                       className={`text-left p-3.5 rounded-xl border transition-all flex items-start gap-3.5 group relative ${
                         isCurrent
-                          ? 'bg-emerald-500/10 border-emerald-500/50 text-white shadow-lg shadow-emerald-950/40'
+                          ? 'bg-brand-500/10 border-brand-500/50 text-white shadow-lg shadow-brand-950/40'
                           : 'bg-neutral-950/60 border-white/5 hover:border-white/20 text-neutral-300 hover:text-white'
                       }`}
                     >
@@ -358,10 +358,10 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-semibold text-white group-hover:text-emerald-300 transition-colors">
+                          <span className="text-sm font-semibold text-white group-hover:text-brand-300 transition-colors">
                             {preset.name}
                           </span>
-                          {isCurrent && <Check size={14} className="text-emerald-400 shrink-0 ml-1" />}
+                          {isCurrent && <Check size={14} className="text-brand-400 shrink-0 ml-1" />}
                         </div>
                         <p className="text-xs text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
                           {preset.description}
@@ -398,7 +398,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                           setSortDirection('asc');
                           setLimit(100);
                         }}
-                        className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500/20 hover:border-emerald-500/30 border border-white/10 text-xs text-neutral-300 hover:text-emerald-300 transition-all font-mono"
+                        className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-brand-500/20 hover:border-brand-500/30 border border-white/10 text-xs text-neutral-300 hover:text-brand-300 transition-all font-mono"
                       >
                         {genre}
                       </button>
@@ -421,7 +421,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                     onClick={() => setMatchStrategy('all')}
                     className={`px-3 py-1 rounded text-xs font-semibold transition-colors ${
                       matchStrategy === 'all'
-                        ? 'bg-emerald-500 text-neutral-950 shadow-sm'
+                        ? 'bg-brand-500 text-neutral-950 shadow-sm'
                         : 'text-neutral-400 hover:text-white'
                     }`}
                   >
@@ -432,7 +432,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                     onClick={() => setMatchStrategy('any')}
                     className={`px-3 py-1 rounded text-xs font-semibold transition-colors ${
                       matchStrategy === 'any'
-                        ? 'bg-emerald-500 text-neutral-950 shadow-sm'
+                        ? 'bg-brand-500 text-neutral-950 shadow-sm'
                         : 'text-neutral-400 hover:text-white'
                     }`}
                   >
@@ -458,7 +458,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                       onChange={(e) =>
                         handleUpdateRule(rule.id, { field: e.target.value as SmartRuleField })
                       }
-                      className="bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 shrink-0 font-medium"
+                      className="bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-brand-500 shrink-0 font-medium"
                     >
                       <option value="genre">Genre</option>
                       <option value="playCount">Play Count</option>
@@ -479,7 +479,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                       onChange={(e) =>
                         handleUpdateRule(rule.id, { operator: e.target.value as SmartRuleOperator })
                       }
-                      className="bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-emerald-500 shrink-0"
+                      className="bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-brand-500 shrink-0"
                     >
                       {rule.field === 'genre' ||
                       rule.field === 'artist' ||
@@ -525,7 +525,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                           value={String(rule.value || '')}
                           onChange={(e) => handleUpdateRule(rule.id, { value: e.target.value })}
                           placeholder="Type or pick below..."
-                          className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500"
+                          className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-brand-500"
                         />
                       </div>
                     ) : (
@@ -542,7 +542,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                         value={String(rule.value ?? '')}
                         onChange={(e) => handleUpdateRule(rule.id, { value: e.target.value })}
                         placeholder="Value..."
-                        className="flex-1 min-w-[100px] bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-emerald-500"
+                        className="flex-1 min-w-[100px] bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-brand-500"
                       />
                     )}
 
@@ -564,7 +564,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
               <button
                 type="button"
                 onClick={handleAddRule}
-                className="w-full py-2 border border-dashed border-white/20 hover:border-emerald-500/50 hover:bg-emerald-500/5 rounded-xl text-xs font-semibold text-neutral-300 hover:text-emerald-400 flex items-center justify-center gap-1.5 transition-all"
+                className="w-full py-2 border border-dashed border-white/20 hover:border-brand-500/50 hover:bg-brand-500/5 rounded-xl text-xs font-semibold text-neutral-300 hover:text-brand-400 flex items-center justify-center gap-1.5 transition-all"
               >
                 <Plus size={14} />
                 <span>Add Another Condition</span>
@@ -582,7 +582,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as SmartSortField)}
-                      className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-brand-500"
                     >
                       <option value="dateAdded">Date Added</option>
                       <option value="playCount">Play Count</option>
@@ -601,7 +601,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                     <select
                       value={sortDirection}
                       onChange={(e) => setSortDirection(e.target.value as 'asc' | 'desc')}
-                      className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-brand-500"
                     >
                       <option value="desc">Descending (Highest / Newest)</option>
                       <option value="asc">Ascending (Lowest / Oldest)</option>
@@ -616,7 +616,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                         const val = Number(e.target.value);
                         setLimit(val === 0 ? undefined : val);
                       }}
-                      className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-neutral-900 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-brand-500"
                     >
                       <option value="0">No Limit (All matching)</option>
                       <option value="25">Max 25 Tracks</option>
@@ -631,14 +631,14 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
           )}
 
           {/* Live Preview Bar */}
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-3.5 space-y-2">
+          <div className="rounded-xl border border-brand-500/20 bg-brand-950/20 p-3.5 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-semibold text-emerald-300">
+                <div className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
+                <span className="text-xs font-semibold text-brand-300">
                   Live Library Match: {matchingTracks.length} tracks
                 </span>
-                <span className="text-xs text-emerald-400/60 font-mono">
+                <span className="text-xs text-brand-400/60 font-mono">
                   ({formatTime(totalDuration)})
                 </span>
               </div>
@@ -647,7 +647,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowPreviewList((prev) => !prev)}
-                  className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-medium transition-colors"
+                  className="text-xs text-brand-400 hover:text-brand-300 flex items-center gap-1 font-medium transition-colors"
                 >
                   <span>{showPreviewList ? 'Hide Songs' : 'View Matching Songs'}</span>
                   {showPreviewList ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -657,7 +657,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
 
             {/* Collapsible preview list */}
             {showPreviewList && matchingTracks.length > 0 && (
-              <div className="mt-2 max-h-40 overflow-y-auto space-y-1 pr-1 border-t border-emerald-500/10 pt-2">
+              <div className="mt-2 max-h-40 overflow-y-auto space-y-1 pr-1 border-t border-brand-500/10 pt-2">
                 {matchingTracks.slice(0, 15).map((t, i) => (
                   <div
                     key={t.id}
@@ -665,7 +665,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
                   >
                     <div className="flex items-center gap-2 truncate">
                       <span className="text-neutral-500 text-[10px] w-4">{i + 1}</span>
-                      <Music size={12} className="text-emerald-400 shrink-0" />
+                      <Music size={12} className="text-brand-400 shrink-0" />
                       <span className="text-white font-sans font-medium truncate">{t.title}</span>
                       <span className="text-neutral-400 font-sans truncate">· {t.artist}</span>
                     </div>
@@ -700,7 +700,7 @@ export const SmartPlaylistModal: React.FC<SmartPlaylistModalProps> = ({
             type="button"
             onClick={handleSubmit}
             disabled={!name.trim()}
-            className="px-5 py-2.5 rounded-lg text-xs font-bold bg-emerald-500 text-neutral-950 hover:bg-emerald-400 disabled:opacity-50 transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-1.5"
+            className="px-5 py-2.5 rounded-lg text-xs font-bold bg-brand-500 text-neutral-950 hover:bg-brand-400 disabled:opacity-50 transition-all shadow-lg shadow-brand-500/20 flex items-center gap-1.5"
           >
             <Sparkles size={14} />
             <span>{editingPlaylist ? 'Save Rule Changes' : 'Create Smart Playlist'}</span>

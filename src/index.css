@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* YASWAVE brand palette — turquoise sampled from the app logo. */
+@theme {
+  --color-brand-200: #a9f0ee;
+  --color-brand-300: #6ee7e2;
+  --color-brand-400: #34d4ce;
+  --color-brand-500: #19bebe;
+  --color-brand-600: #12989a;
+  --color-brand-950: #053b3c;
+}
+
 @layer base {
   :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -13,9 +23,9 @@
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-active: rgba(255, 255, 255, 0.16);
     
-    --accent-primary: #10b981;
-    --accent-hover: #059669;
-    --accent-glow: rgba(16, 185, 129, 0.2);
+    --accent-primary: #19bebe;
+    --accent-hover: #12a0a0;
+    --accent-glow: rgba(25, 190, 190, 0.2);
     --text-primary: #f3f4f6;
     --text-secondary: #9ca3af;
     --text-muted: #6b7280;

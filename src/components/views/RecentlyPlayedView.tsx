@@ -50,7 +50,7 @@ export const RecentlyPlayedView: React.FC<RecentlyPlayedViewProps> = ({
         {recentlyPlayed.length > 0 && (
           <button
             onClick={() => onPlayTrack(recentlyPlayed[0], recentlyPlayed)}
-            className="w-12 h-12 rounded-full bg-emerald-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-xl transition-transform"
+            className="w-12 h-12 rounded-full bg-brand-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-xl transition-transform"
             title="Play Recently Played"
           >
             <Play size={22} className="fill-current ml-0.5" />

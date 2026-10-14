@@ -158,13 +158,13 @@ export const VisualizerOverlay: React.FC<VisualizerOverlayProps> = ({
       {/* Main Canvas Area */}
       <div className="flex-1 relative p-6 flex flex-col items-center justify-center">
         {isAudioContextSuspended && (
-          <div className="absolute top-8 z-10 px-4 py-2 bg-neutral-900 border border-emerald-500/40 rounded-full flex items-center gap-3 shadow-2xl">
+          <div className="absolute top-8 z-10 px-4 py-2 bg-neutral-900 border border-brand-500/40 rounded-full flex items-center gap-3 shadow-2xl">
             <span className="text-xs text-neutral-300">
               Web Audio analysis suspended until gesture.
             </span>
             <button
               onClick={handleResumeAudio}
-              className="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-500 text-neutral-950 hover:bg-emerald-400 transition-colors"
+              className="text-xs font-semibold px-2.5 py-1 rounded bg-brand-500 text-neutral-950 hover:bg-brand-400 transition-colors"
             >
               Enable AudioContext
             </button>

@@ -81,9 +81,9 @@ export const TrackTable: React.FC<TrackTableProps> = ({
       return <ArrowUpDown size={12} className="opacity-0 group-hover/col:opacity-60 transition-opacity ml-1" />;
     }
     return sortDir === 'asc' ? (
-      <ArrowUp size={12} className="text-emerald-400 ml-1" />
+      <ArrowUp size={12} className="text-brand-400 ml-1" />
     ) : (
-      <ArrowDown size={12} className="text-emerald-400 ml-1" />
+      <ArrowDown size={12} className="text-brand-400 ml-1" />
     );
   };
 

@@ -1,6 +1,6 @@
 export const APP_CONFIG = {
-  name: 'Nocturne',
-  tagline: 'Modern Desktop Audio Player',
+  name: 'YASWAVE',
+  tagline: 'Modern Cross-Platform Music Player',
   version: '1.0.0',
   storageKeyPrefix: 'nocturne_',
   dbName: 'nocturne_music_db',
@@ -23,17 +23,17 @@ export const APP_CONFIG = {
   seekIntervalSeconds: 5,
   defaultVolume: 0.8,
   accentColors: {
-    emerald: {
-      name: 'Emerald (Spotify)',
-      primary: '#10b981',
-      hover: '#059669',
-      border: 'border-emerald-500/30',
-      bg: 'bg-emerald-500',
-      text: 'text-emerald-400',
-      glow: 'rgba(16, 185, 129, 0.25)',
+    brand: {
+      name: 'YASWAVE Turquoise',
+      primary: '#19bebe',
+      hover: '#12a0a0',
+      border: 'border-brand-500/30',
+      bg: 'bg-brand-500',
+      text: 'text-brand-400',
+      glow: 'rgba(25, 190, 190, 0.25)',
     },
     violet: {
-      name: 'Nocturne Violet',
+      name: 'YASWAVE Violet',
       primary: '#8b5cf6',
       hover: '#7c3aed',
       border: 'border-violet-500/30',

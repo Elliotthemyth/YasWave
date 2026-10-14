@@ -39,7 +39,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     }
   };
 
-  const accentOptions: AccentColor[] = ['emerald', 'violet', 'cyan', 'amber', 'rose', 'monochrome'];
+  const accentOptions: AccentColor[] = ['brand', 'violet', 'cyan', 'amber', 'rose', 'monochrome'];
   const themeOptions: { id: AppTheme; label: string; desc: string }[] = [
     { id: 'dark', label: 'Dark Charcoal', desc: 'Spotify-inspired dark surface' },
     { id: 'oled', label: 'OLED Midnight', desc: 'Pure true black background' },
@@ -51,14 +51,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       <div>
         <h1 className="text-3xl font-extrabold text-white tracking-tight">Settings & Preferences</h1>
         <p className="text-xs text-neutral-400 mt-1">
-          Customize Nocturne&apos;s audio engine, visual identity, and desktop behavior.
+          Customize YASWAVE&apos;s audio engine, visual identity, and desktop behavior.
         </p>
       </div>
 
       {/* Section 1: Appearance & Themes */}
       <div className="bg-neutral-900/40 rounded-2xl border border-white/5 p-6 space-y-6">
         <div className="flex items-center gap-2.5 pb-3 border-b border-white/5">
-          <Palette size={18} className="text-emerald-400" />
+          <Palette size={18} className="text-brand-400" />
           <h2 className="font-bold text-white text-base">Appearance & Themes</h2>
         </div>
 
@@ -74,14 +74,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 onClick={() => onUpdatePreferences({ theme: opt.id })}
                 className={`p-3.5 rounded-xl border text-left transition-all ${
                   preferences.theme === opt.id
-                    ? 'border-emerald-500 bg-emerald-500/10'
+                    ? 'border-brand-500 bg-brand-500/10'
                     : 'border-white/10 bg-white/5 hover:border-white/20'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-sm text-neutral-200">{opt.label}</span>
                   {preferences.theme === opt.id && (
-                    <Check size={16} className="text-emerald-400" />
+                    <Check size={16} className="text-brand-400" />
                   )}
                 </div>
                 <p className="text-xs text-neutral-400 mt-1">{opt.desc}</p>
@@ -150,7 +150,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* Section 2: Audio Engine & Playback */}
       <div className="bg-neutral-900/40 rounded-2xl border border-white/5 p-6 space-y-6">
         <div className="flex items-center gap-2.5 pb-3 border-b border-white/5">
-          <Volume2 size={18} className="text-emerald-400" />
+          <Volume2 size={18} className="text-brand-400" />
           <h2 className="font-bold text-white text-base">Audio Engine & Playback</h2>
         </div>
 
@@ -158,7 +158,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         <div className="space-y-2">
           <div className="flex justify-between text-xs">
             <span className="font-semibold text-neutral-300">Default Startup Volume</span>
-            <span className="text-emerald-400 font-mono tabular-nums">
+            <span className="text-brand-400 font-mono tabular-nums">
               {Math.round(preferences.defaultVolume * 100)}%
             </span>
           </div>
@@ -171,7 +171,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             onChange={(e) =>
               onUpdatePreferences({ defaultVolume: parseFloat(e.target.value) })
             }
-            className="w-full accent-emerald-500 cursor-pointer"
+            className="w-full accent-brand-500 cursor-pointer"
           />
         </div>
 
@@ -180,7 +180,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <div>
             <p className="text-sm font-semibold text-neutral-200">Remember Playback State</p>
             <p className="text-xs text-neutral-400">
-              Restore current song and position when opening Nocturne
+              Restore current song and position when opening YASWAVE
             </p>
           </div>
           <input
@@ -189,7 +189,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             onChange={(e) =>
               onUpdatePreferences({ rememberPlaybackPosition: e.target.checked })
             }
-            className="w-5 h-5 accent-emerald-500 rounded cursor-pointer"
+            className="w-5 h-5 accent-brand-500 rounded cursor-pointer"
           />
         </div>
 
@@ -207,7 +207,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             onChange={(e) =>
               onUpdatePreferences({ enableVisualizer: e.target.checked })
             }
-            className="w-5 h-5 accent-emerald-500 rounded cursor-pointer"
+            className="w-5 h-5 accent-brand-500 rounded cursor-pointer"
           />
         </div>
       </div>
@@ -215,19 +215,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* Section 3: Linux Desktop Packaging & Tauri Architecture */}
       <div className="bg-neutral-900/40 rounded-2xl border border-white/5 p-6 space-y-4">
         <div className="flex items-center gap-2.5 pb-2 border-b border-white/5">
-          <HardDrive size={18} className="text-emerald-400" />
+          <HardDrive size={18} className="text-brand-400" />
           <h2 className="font-bold text-white text-base">Desktop Linux & Tauri 2 Integration</h2>
         </div>
 
         <p className="text-xs text-neutral-300 leading-relaxed">
-          Nocturne has been engineered from the ground up with a strict adapter boundary
-          (<code className="text-emerald-400">BrowserFileAdapter</code> vs{' '}
-          <code className="text-emerald-400">TauriFileAdapter</code>, and{' '}
-          <code className="text-emerald-400">LibraryRepository</code>).
+          YASWAVE has been engineered from the ground up with a strict adapter boundary
+          (<code className="text-brand-400">BrowserFileAdapter</code> vs{' '}
+          <code className="text-brand-400">TauriFileAdapter</code>, and{' '}
+          <code className="text-brand-400">LibraryRepository</code>).
         </p>
 
         <div className="p-4 rounded-xl bg-neutral-950 font-mono text-xs text-neutral-300 space-y-2 border border-white/5 overflow-x-auto">
-          <p className="text-emerald-400"># To compile as a native Linux desktop .deb / .AppImage:</p>
+          <p className="text-brand-400"># To compile as a native Linux desktop .deb / .AppImage:</p>
           <p>npm install --save-dev @tauri-apps/cli @tauri-apps/api</p>
           <p>npm run tauri init</p>
           <p>npm run tauri build</p>
@@ -237,7 +237,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* Section 4: Keyboard Shortcuts & Accessibility */}
       <div className="bg-neutral-900/40 rounded-2xl border border-white/5 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-400 shrink-0">
             <Keyboard size={20} />
           </div>
           <div>

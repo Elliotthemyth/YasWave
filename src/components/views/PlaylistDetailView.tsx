@@ -109,8 +109,8 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
           <div
             className={`w-32 h-32 rounded-2xl flex items-center justify-center shadow-2xl shrink-0 border ${
               isSmart
-                ? 'bg-gradient-to-br from-emerald-950 via-neutral-900 to-cyan-950 border-emerald-500/30 text-emerald-400'
-                : 'bg-gradient-to-br from-neutral-800 to-neutral-900 border-white/10 text-emerald-400'
+                ? 'bg-gradient-to-br from-brand-950 via-neutral-900 to-cyan-950 border-brand-500/30 text-brand-400'
+                : 'bg-gradient-to-br from-neutral-800 to-neutral-900 border-white/10 text-brand-400'
             }`}
           >
             {isSmart ? (
@@ -125,7 +125,7 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
               <span
                 className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                   isSmart
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30'
                     : 'text-neutral-400'
                 }`}
               >
@@ -144,7 +144,7 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="bg-neutral-900 border border-white/20 rounded px-3 py-1.5 text-xl font-bold text-white focus:outline-none focus:border-emerald-500"
+                  className="bg-neutral-900 border border-white/20 rounded px-3 py-1.5 text-xl font-bold text-white focus:outline-none focus:border-brand-500"
                   autoFocus
                 />
                 <textarea
@@ -152,12 +152,12 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Playlist description..."
                   rows={2}
-                  className="w-full bg-neutral-900 border border-white/20 rounded p-2 text-xs text-neutral-300 focus:outline-none focus:border-emerald-500 resize-none block"
+                  className="w-full bg-neutral-900 border border-white/20 rounded p-2 text-xs text-neutral-300 focus:outline-none focus:border-brand-500 resize-none block"
                 />
                 <div className="flex items-center gap-2 pt-1">
                   <button
                     type="submit"
-                    className="px-3 py-1 bg-emerald-500 text-neutral-950 font-semibold text-xs rounded hover:bg-emerald-400 flex items-center gap-1 transition-colors"
+                    className="px-3 py-1 bg-brand-500 text-neutral-950 font-semibold text-xs rounded hover:bg-brand-400 flex items-center gap-1 transition-colors"
                   >
                     <Save size={12} />
                     <span>Save</span>
@@ -183,7 +183,7 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
                   </p>
                 )}
                 <p className="text-xs text-neutral-400 mt-2 font-mono">
-                  <span className="text-emerald-400 font-bold">{playlistTracks.length} songs</span> ·{' '}
+                  <span className="text-brand-400 font-bold">{playlistTracks.length} songs</span> ·{' '}
                   {formatTime(totalDuration)} total duration
                 </p>
               </div>
@@ -197,7 +197,7 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
             <>
               <button
                 onClick={() => onPlayTrack(playlistTracks[0], playlistTracks)}
-                className="w-12 h-12 rounded-full bg-emerald-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-xl transition-all shadow-emerald-500/20"
+                className="w-12 h-12 rounded-full bg-brand-500 text-neutral-950 flex items-center justify-center hover:scale-105 active:scale-95 shadow-xl transition-all shadow-brand-500/20"
                 title="Play Playlist"
               >
                 <Play size={22} className="fill-current ml-0.5" />
@@ -216,7 +216,7 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
           {isSmart && onEditSmartRules && (
             <button
               onClick={() => onEditSmartRules(playlist)}
-              className="px-3.5 py-2.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+              className="px-3.5 py-2.5 rounded-full bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/30 text-brand-400 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
               title="Edit Smart Playlist Rules"
             >
               <SlidersHorizontal size={14} />
@@ -260,18 +260,18 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
 
       {/* Smart Playlist Rules Banner */}
       {isSmart && rulesSummary && (
-        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/30 via-neutral-900/60 to-neutral-950/40 border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="p-4 rounded-xl bg-gradient-to-r from-brand-950/30 via-neutral-900/60 to-neutral-950/40 border border-brand-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <Sparkles size={16} className="text-emerald-400 shrink-0" />
+            <Sparkles size={16} className="text-brand-400 shrink-0" />
             <div className="text-xs">
               <span className="text-neutral-400 font-medium">Active Rules: </span>
-              <span className="text-emerald-300 font-semibold">{rulesSummary}</span>
+              <span className="text-brand-300 font-semibold">{rulesSummary}</span>
             </div>
           </div>
           {onEditSmartRules && (
             <button
               onClick={() => onEditSmartRules(playlist)}
-              className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold underline underline-offset-2 shrink-0 transition-colors"
+              className="text-xs text-brand-400 hover:text-brand-300 font-semibold underline underline-offset-2 shrink-0 transition-colors"
             >
               Customize Rules
             </button>

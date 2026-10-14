@@ -41,7 +41,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
       <button
         onClick={onToggleShuffle}
         className={`relative p-1.5 rounded-full transition-colors ${
-          isShuffle ? 'text-emerald-400' : 'text-neutral-400 hover:text-white'
+          isShuffle ? 'text-brand-400' : 'text-neutral-400 hover:text-white'
         }`}
         title={`Shuffle: ${isShuffle ? 'On' : 'Off'}`}
         aria-label="Toggle shuffle"
@@ -94,7 +94,7 @@ export const PlaybackControls: React.FC<PlaybackControlsProps> = ({
       <button
         onClick={onCycleRepeatMode}
         className={`relative p-1.5 rounded-full transition-colors ${
-          repeatMode !== 'off' ? 'text-emerald-400' : 'text-neutral-400 hover:text-white'
+          repeatMode !== 'off' ? 'text-brand-400' : 'text-neutral-400 hover:text-white'
         }`}
         title={`Repeat: ${repeatMode === 'one' ? 'Repeat One' : repeatMode === 'all' ? 'Repeat All' : 'Off'}`}
         aria-label="Cycle repeat mode"

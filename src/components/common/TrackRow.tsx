@@ -77,12 +77,12 @@ export const TrackRow: React.FC<TrackRowProps> = ({
           <div className="flex items-center gap-0.5 w-6 h-6 justify-center">
             {isPlaying ? (
               <span className="flex items-end gap-[2px] h-3">
-                <span className="w-[3px] h-3 bg-emerald-400 animate-pulse rounded-full" />
-                <span className="w-[3px] h-2 bg-emerald-400 animate-pulse delay-75 rounded-full" />
-                <span className="w-[3px] h-3.5 bg-emerald-400 animate-pulse delay-150 rounded-full" />
+                <span className="w-[3px] h-3 bg-brand-400 animate-pulse rounded-full" />
+                <span className="w-[3px] h-2 bg-brand-400 animate-pulse delay-75 rounded-full" />
+                <span className="w-[3px] h-3.5 bg-brand-400 animate-pulse delay-150 rounded-full" />
               </span>
             ) : (
-              <Volume2 size={15} className="text-emerald-400" />
+              <Volume2 size={15} className="text-brand-400" />
             )}
           </div>
         ) : (
@@ -96,7 +96,7 @@ export const TrackRow: React.FC<TrackRowProps> = ({
         <div className="min-w-0">
           <p
             className={`font-medium truncate leading-tight ${
-              isCurrent ? 'text-emerald-400 font-semibold' : 'text-neutral-100 group-hover:text-white'
+              isCurrent ? 'text-brand-400 font-semibold' : 'text-neutral-100 group-hover:text-white'
             }`}
           >
             {track.title}

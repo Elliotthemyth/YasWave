@@ -73,7 +73,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         id: pl.id,
         title: pl.name,
         subtitle: `${count} tracks${isSmart ? ' · Smart' : ''}`,
-        icon: isSmart ? <Sparkles size={18} className="text-emerald-400" /> : undefined,
+        icon: isSmart ? <Sparkles size={18} className="text-brand-400" /> : undefined,
         onClick: () => onSelectView('playlist_detail', pl.id),
       };
     }),
@@ -94,7 +94,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onClick={onOpenImportModal}
           className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-medium text-xs flex items-center gap-2 border border-white/10 shadow-sm transition-all active:scale-95"
         >
-          <FolderDown size={15} className="text-emerald-400" />
+          <FolderDown size={15} className="text-brand-400" />
           <span>Import Local Audio</span>
         </button>
       </div>
@@ -112,16 +112,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 {'icon' in card && card.icon ? (
                   card.icon
                 ) : (
-                  <Sparkles size={18} className="text-emerald-400" />
+                  <Sparkles size={18} className="text-brand-400" />
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-neutral-100 text-sm truncate group-hover:text-emerald-400 transition-colors">
+                <p className="font-semibold text-neutral-100 text-sm truncate group-hover:text-brand-400 transition-colors">
                   {card.title}
                 </p>
                 <p className="text-xs text-neutral-400 truncate">{card.subtitle}</p>
               </div>
-              <div className="w-8 h-8 rounded-full bg-emerald-500 text-neutral-950 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all translate-y-1 group-hover:translate-y-0 shrink-0 mr-1">
+              <div className="w-8 h-8 rounded-full bg-brand-500 text-neutral-950 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all translate-y-1 group-hover:translate-y-0 shrink-0 mr-1">
                 <Play size={14} className="fill-current ml-0.5" />
               </div>
             </div>
@@ -133,7 +133,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Clock size={18} className="text-emerald-400" />
+            <Clock size={18} className="text-brand-400" />
             <h2 className="text-xl font-bold text-white tracking-tight">Recently Added</h2>
           </div>
           <button
@@ -172,7 +172,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       onPlayTrack(track, tracks);
                     }
                   }}
-                  className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-emerald-500 text-neutral-950 flex items-center justify-center shadow-xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
+                  className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-brand-500 text-neutral-950 flex items-center justify-center shadow-xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
                   title="Play"
                 >
                   <Play size={18} className="fill-current ml-0.5" />

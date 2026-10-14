@@ -86,7 +86,7 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
         {/* Header */}
         <div className="h-16 px-6 border-b border-white/10 flex items-center justify-between shrink-0 bg-neutral-950/40">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <div className="w-8 h-8 rounded-lg bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-brand-400">
               <Sparkles size={18} />
             </div>
             <div>
@@ -115,13 +115,13 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search song title and artist..."
-                className="w-full bg-neutral-950 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-xs text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-neutral-950 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-xs text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-brand-500/50"
               />
             </div>
             <button
               type="submit"
               disabled={isLoading || !query.trim()}
-              className="px-4 py-2.5 rounded-xl bg-emerald-500 text-neutral-950 font-semibold text-xs hover:bg-emerald-400 transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-brand-500 text-neutral-950 font-semibold text-xs hover:bg-brand-400 transition-colors flex items-center gap-1.5 disabled:opacity-50"
             >
               {isLoading ? <RefreshCw size={14} className="animate-spin" /> : <Search size={14} />}
               <span>Search</span>
@@ -133,7 +133,7 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {isLoading && (
             <div className="py-16 flex flex-col items-center justify-center text-neutral-400 gap-3">
-              <RefreshCw size={24} className="animate-spin text-emerald-400" />
+              <RefreshCw size={24} className="animate-spin text-brand-400" />
               <span className="text-xs">Searching LRCLIB database...</span>
             </div>
           )}
@@ -155,7 +155,7 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
                   key={cand.id}
                   className={`p-3.5 rounded-xl border transition-all text-xs ${
                     isSelectedPreview
-                      ? 'border-emerald-500/40 bg-emerald-500/5'
+                      ? 'border-brand-500/40 bg-brand-500/5'
                       : 'border-white/5 bg-white/[0.03] hover:bg-white/[0.06]'
                   }`}
                 >
@@ -166,7 +166,7 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
                           {cand.trackName}
                         </span>
                         {hasSynced && (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-500/20 text-brand-300 border border-brand-500/30">
                             Synced LRC
                           </span>
                         )}
@@ -178,7 +178,7 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
                             cand.matchScore >= 80
-                              ? 'bg-emerald-500/10 text-emerald-400'
+                              ? 'bg-brand-500/10 text-brand-400'
                               : cand.matchScore >= 60
                               ? 'bg-amber-500/10 text-amber-400'
                               : 'bg-neutral-800 text-neutral-400'
@@ -222,7 +222,7 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
                           onSelectCandidate(cand);
                           onClose();
                         }}
-                        className="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-semibold transition-colors flex items-center gap-1 shadow"
+                        className="px-3.5 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-400 text-neutral-950 font-semibold transition-colors flex items-center gap-1 shadow"
                       >
                         <Check size={14} />
                         <span>Use Lyrics</span>
@@ -244,7 +244,7 @@ export const LyricsSearchModal: React.FC<LyricsSearchModalProps> = ({
         {/* Footer */}
         <div className="px-6 py-3 bg-neutral-950/60 border-t border-white/10 flex items-center justify-between text-xs text-neutral-500 shrink-0">
           <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={13} className="text-emerald-400" />
+            <CheckCircle2 size={13} className="text-brand-400" />
             <span>Community-verified database · Free & Open API</span>
           </div>
 

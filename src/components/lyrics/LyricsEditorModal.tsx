@@ -66,7 +66,7 @@ export const LyricsEditorModal: React.FC<LyricsEditorModalProps> = ({
         {/* Header */}
         <div className="h-14 px-5 border-b border-white/10 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
-            <FileText size={18} className="text-emerald-400" />
+            <FileText size={18} className="text-brand-400" />
             <div>
               <h3 className="font-semibold text-neutral-100 text-sm">Edit Lyrics</h3>
               <p className="text-xs text-neutral-400 truncate max-w-sm">
@@ -86,12 +86,12 @@ export const LyricsEditorModal: React.FC<LyricsEditorModalProps> = ({
         {/* Toolbar */}
         <div className="px-5 py-2.5 bg-neutral-950/60 border-b border-white/5 flex items-center justify-between text-xs text-neutral-400">
           <span>
-            Use format <code className="text-emerald-400">[mm:ss.xx] Lyric text</code> for synced lines.
+            Use format <code className="text-brand-400">[mm:ss.xx] Lyric text</code> for synced lines.
           </span>
 
           <button
             onClick={handleStampCurrentTime}
-            className="px-3 py-1.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium flex items-center gap-1.5 border border-emerald-500/30 transition-colors"
+            className="px-3 py-1.5 rounded bg-brand-500/20 hover:bg-brand-500/30 text-brand-300 font-medium flex items-center gap-1.5 border border-brand-500/30 transition-colors"
             title="Insert timestamp at current cursor position"
           >
             <Clock size={13} />
@@ -106,7 +106,7 @@ export const LyricsEditorModal: React.FC<LyricsEditorModalProps> = ({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="[00:00.00] Intro music&#10;[00:04.50] First verse begins here&#10;[00:10.00] Second line..."
-            className="w-full h-full min-h-[320px] bg-neutral-950 border border-white/10 rounded-lg p-3 text-xs md:text-sm font-mono text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50 resize-none select-text"
+            className="w-full h-full min-h-[320px] bg-neutral-950 border border-white/10 rounded-lg p-3 text-xs md:text-sm font-mono text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-brand-500/50 resize-none select-text"
           />
         </div>
 
@@ -128,7 +128,7 @@ export const LyricsEditorModal: React.FC<LyricsEditorModalProps> = ({
             </button>
             <button
               onClick={handleSave}
-              className="px-4 py-2 rounded-lg text-xs font-semibold bg-emerald-500 text-neutral-950 hover:bg-emerald-400 flex items-center gap-1.5 transition-colors shadow-md"
+              className="px-4 py-2 rounded-lg text-xs font-semibold bg-brand-500 text-neutral-950 hover:bg-brand-400 flex items-center gap-1.5 transition-colors shadow-md"
             >
               <Save size={14} />
               <span>Save Lyrics</span>

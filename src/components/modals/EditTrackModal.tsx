@@ -60,7 +60,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
       >
         <div className="h-14 px-5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Edit3 size={18} className="text-emerald-400" />
+            <Edit3 size={18} className="text-brand-400" />
             <h3 className="font-semibold text-neutral-100 text-sm">Edit Track Information</h3>
           </div>
           <button
@@ -88,7 +88,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-brand-500/50"
                 required
               />
             </div>
@@ -99,7 +99,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
                 type="text"
                 value={artist}
                 onChange={(e) => setArtist(e.target.value)}
-                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-brand-500/50"
               />
             </div>
 
@@ -109,7 +109,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
                 type="text"
                 value={album}
                 onChange={(e) => setAlbum(e.target.value)}
-                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-brand-500/50"
               />
             </div>
 
@@ -120,7 +120,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
                   type="text"
                   value={genre}
                   onChange={(e) => setGenre(e.target.value)}
-                  className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-brand-500/50"
                 />
               </div>
               <div>
@@ -129,7 +129,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
                   type="number"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-brand-500/50"
                 />
               </div>
               <div>
@@ -138,7 +138,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
                   type="number"
                   value={trackNumber}
                   onChange={(e) => setTrackNumber(e.target.value)}
-                  className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 focus:outline-none focus:border-brand-500/50"
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ export const EditTrackModal: React.FC<EditTrackModalProps> = ({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg text-xs font-semibold bg-emerald-500 text-neutral-950 hover:bg-emerald-400 flex items-center gap-1.5 shadow"
+              className="px-4 py-2 rounded-lg text-xs font-semibold bg-brand-500 text-neutral-950 hover:bg-brand-400 flex items-center gap-1.5 shadow"
             >
               <Save size={14} />
               <span>Save Changes</span>

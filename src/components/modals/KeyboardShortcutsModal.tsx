@@ -212,7 +212,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
   ];
 
   const categoryIcons: Record<string, React.ReactNode> = {
-    Playback: <Music size={13} className="text-emerald-400" />,
+    Playback: <Music size={13} className="text-brand-400" />,
     'Lyrics & Persian': <Sparkles size={13} className="text-indigo-400" />,
     'Overlays & Visuals': <Sliders size={13} className="text-cyan-400" />,
     Navigation: <Layout size={13} className="text-amber-400" />,
@@ -256,7 +256,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
         {/* Header */}
         <div className="h-16 px-6 border-b border-white/10 flex items-center justify-between shrink-0 bg-neutral-950/60">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-brand-400 shadow-sm">
               <Keyboard size={20} />
             </div>
             <div>
@@ -266,7 +266,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
                   {SHORTCUTS_LIST.length} actions
                 </span>
               </div>
-              <p className="text-xs text-neutral-400">Quickly control Nocturne with your keyboard</p>
+              <p className="text-xs text-neutral-400">Quickly control YASWAVE with your keyboard</p>
             </div>
           </div>
 
@@ -288,7 +288,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search shortcuts by action, key, or category (e.g. Space, Next, Persian, Seek)..."
-              className="w-full bg-neutral-950 border border-white/10 rounded-xl pl-10 pr-9 py-2.5 text-xs text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 shadow-inner"
+              className="w-full bg-neutral-950 border border-white/10 rounded-xl pl-10 pr-9 py-2.5 text-xs text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-brand-500/50 shadow-inner"
               autoFocus
             />
             {search && (
@@ -312,7 +312,7 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 flex items-center gap-1.5 ${
                     isSelected
-                      ? 'bg-emerald-500 text-neutral-950 font-bold shadow'
+                      ? 'bg-brand-500 text-neutral-950 font-bold shadow'
                       : 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10 border border-white/5'
                   }`}
                 >

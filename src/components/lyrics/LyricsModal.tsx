@@ -299,7 +299,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
             <div className="flex items-center gap-2">
               <h2 className="font-bold text-neutral-100 text-base">Synchronized Lyrics</h2>
               {currentTrack?.lyricsProvider && (
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-brand-500/20 text-brand-300 border border-brand-500/30">
                   {currentTrack.lyricsProvider}
                 </span>
               )}
@@ -374,7 +374,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
               >
                 <Minus size={12} />
               </button>
-              <span className="font-mono tabular-nums font-semibold w-11 text-center text-emerald-400 text-[11px]">
+              <span className="font-mono tabular-nums font-semibold w-11 text-center text-brand-400 text-[11px]">
                 {offset > 0 ? `+${offset.toFixed(1)}s` : `${offset.toFixed(1)}s`}
               </span>
               <button
@@ -402,7 +402,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
             className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors border border-white/10"
             title="Search for lyrics on LRCLIB"
           >
-            <Search size={13} className="text-emerald-400" />
+            <Search size={13} className="text-brand-400" />
             <span className="hidden sm:inline">Find on LRCLIB</span>
           </button>
 
@@ -458,7 +458,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
       {autoSearchNotice && (
         <div className="bg-neutral-900 border-b border-white/5 px-6 py-2 flex items-center justify-between text-xs text-neutral-300">
           <div className="flex items-center gap-2">
-            <Sparkles size={14} className="text-emerald-400" />
+            <Sparkles size={14} className="text-brand-400" />
             <span>{autoSearchNotice}</span>
           </div>
           <button
@@ -478,15 +478,15 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
       >
         {!lyricsDoc || lyricsDoc.lines.length === 0 ? (
           <div className="my-auto flex flex-col items-center gap-4 text-neutral-400 max-w-md">
-            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 shadow-inner">
+            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-400 shadow-inner">
               <Sparkles size={26} />
             </div>
 
             <div>
               <p className="text-lg font-bold text-neutral-100">No lyrics loaded yet</p>
               <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                Nocturne can automatically search the community-curated <strong>LRCLIB</strong> database
-                or you can import a local <code className="text-emerald-400">.lrc</code> file.
+                YASWAVE can automatically search the community-curated <strong>LRCLIB</strong> database
+                or you can import a local <code className="text-brand-400">.lrc</code> file.
               </p>
             </div>
 
@@ -494,7 +494,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
               <button
                 onClick={handleAutoDiscoverLyrics}
                 disabled={isSearchingAuto || !currentTrack}
-                className="px-4 py-2 rounded-full bg-emerald-500 text-neutral-950 font-bold text-xs hover:bg-emerald-400 transition-all shadow-lg flex items-center gap-2 disabled:opacity-50"
+                className="px-4 py-2 rounded-full bg-brand-500 text-neutral-950 font-bold text-xs hover:bg-brand-400 transition-all shadow-lg flex items-center gap-2 disabled:opacity-50"
               >
                 {isSearchingAuto ? <RefreshCw size={14} className="animate-spin" /> : <Sparkles size={14} />}
                 <span>Auto-Search LRCLIB</span>
@@ -567,7 +567,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
                             key={wIdx}
                             className={`transition-colors duration-150 inline-block mr-1.5 ${
                               isWordActive
-                                ? 'text-emerald-400 font-bold scale-105'
+                                ? 'text-brand-400 font-bold scale-105'
                                 : isActive
                                 ? 'text-white'
                                 : 'text-neutral-400'
@@ -591,7 +591,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
                         dir="rtl"
                         className={`transition-colors duration-200 leading-relaxed font-persian ${
                           isActive
-                            ? `${fontClasses.transActive} text-emerald-300 font-semibold drop-shadow-sm`
+                            ? `${fontClasses.transActive} text-brand-300 font-semibold drop-shadow-sm`
                             : `${fontClasses.trans} text-neutral-400 font-normal`
                         }`}
                         style={{ fontFamily: "'Vazirmatn', system-ui, sans-serif" }}
@@ -612,7 +612,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
                             text: '',
                           });
                         }}
-                        className="opacity-0 group-hover:opacity-100 text-[11px] text-neutral-500 hover:text-emerald-400 transition-opacity flex items-center gap-1 mx-auto font-persian"
+                        className="opacity-0 group-hover:opacity-100 text-[11px] text-neutral-500 hover:text-brand-400 transition-opacity flex items-center gap-1 mx-auto font-persian"
                       >
                         <Plus size={11} />
                         <span>افزودن ترجمه فارسی</span>
@@ -695,7 +695,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
 
         {/* Right Info */}
         <div className="w-1/4 min-w-[140px] flex items-center justify-end gap-2 text-xs text-neutral-400">
-          <Languages size={15} className="text-emerald-400" />
+          <Languages size={15} className="text-brand-400" />
           <span className="font-persian text-xs">فارسی و انگلیسی</span>
         </div>
       </footer>
@@ -742,7 +742,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
                 }
                 rows={2}
                 placeholder="ترجمه روان این سطر را وارد کنید..."
-                className="w-full bg-neutral-950 border border-white/10 rounded-lg p-2.5 text-sm text-neutral-100 focus:outline-none focus:border-emerald-500/50 font-persian"
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg p-2.5 text-sm text-neutral-100 focus:outline-none focus:border-brand-500/50 font-persian"
                 autoFocus
               />
             </div>
@@ -756,7 +756,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
               </button>
               <button
                 onClick={handleSaveEditedLineTranslation}
-                className="px-4 py-1.5 rounded-lg bg-emerald-500 text-neutral-950 font-semibold text-xs hover:bg-emerald-400 shadow"
+                className="px-4 py-1.5 rounded-lg bg-brand-500 text-neutral-950 font-semibold text-xs hover:bg-brand-400 shadow"
               >
                 Save Translation
               </button>

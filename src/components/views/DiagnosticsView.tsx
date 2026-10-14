@@ -425,7 +425,7 @@ export const DiagnosticsView: React.FC = () => {
         <button
           onClick={runAllTests}
           disabled={isRunning}
-          className="px-4 py-2.5 rounded-full bg-emerald-500 text-neutral-950 font-semibold text-xs hover:bg-emerald-400 flex items-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-50"
+          className="px-4 py-2.5 rounded-full bg-brand-500 text-neutral-950 font-semibold text-xs hover:bg-brand-400 flex items-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-50"
         >
           {isRunning ? <RefreshCw size={14} className="animate-spin" /> : <Play size={14} />}
           <span>Run All Tests</span>
@@ -440,9 +440,9 @@ export const DiagnosticsView: React.FC = () => {
             {results.length}
           </p>
         </div>
-        <div className="p-4 rounded-xl bg-neutral-900/60 border border-emerald-500/20">
-          <p className="text-xs text-emerald-400 uppercase font-semibold">Passed</p>
-          <p className="text-2xl font-bold font-mono tabular-nums text-emerald-400 mt-1">
+        <div className="p-4 rounded-xl bg-neutral-900/60 border border-brand-500/20">
+          <p className="text-xs text-brand-400 uppercase font-semibold">Passed</p>
+          <p className="text-2xl font-bold font-mono tabular-nums text-brand-400 mt-1">
             {passedCount}
           </p>
         </div>
@@ -457,7 +457,7 @@ export const DiagnosticsView: React.FC = () => {
       {/* Test Results Table */}
       <div className="bg-neutral-900/40 rounded-xl border border-white/5 overflow-hidden">
         <div className="px-5 py-3 border-b border-white/10 flex items-center gap-2 text-xs font-semibold text-neutral-400 uppercase tracking-wider">
-          <Terminal size={14} className="text-emerald-400" />
+          <Terminal size={14} className="text-brand-400" />
           <span>Test Suite Executions</span>
         </div>
 
@@ -466,7 +466,7 @@ export const DiagnosticsView: React.FC = () => {
             <div key={i} className="p-4 flex items-start justify-between gap-4 text-xs">
               <div className="flex items-start gap-3">
                 {r.passed ? (
-                  <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 size={16} className="text-brand-400 shrink-0 mt-0.5" />
                 ) : (
                   <XCircle size={16} className="text-rose-400 shrink-0 mt-0.5" />
                 )}

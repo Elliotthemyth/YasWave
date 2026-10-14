@@ -96,7 +96,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           onClick={onToggleLyrics}
           className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 border transition-colors ${
             isLyricsOpen
-              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+              ? 'bg-brand-500/20 border-brand-500/40 text-brand-300'
               : 'bg-white/5 border-white/5 text-neutral-300 hover:text-white hover:bg-white/10'
           }`}
           title="Toggle Lyrics (L)"
@@ -109,7 +109,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           onClick={onToggleVisualizer}
           className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 border transition-colors ${
             isVisualizerOpen
-              ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+              ? 'bg-brand-500/20 border-brand-500/40 text-brand-300'
               : 'bg-white/5 border-white/5 text-neutral-300 hover:text-white hover:bg-white/10'
           }`}
           title="Toggle Visualizer (V)"
@@ -120,7 +120,7 @@ export const TopNav: React.FC<TopNavProps> = ({
 
         <button
           onClick={onOpenImportModal}
-          className="px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500 text-neutral-950 hover:bg-emerald-400 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+          className="px-3 py-1.5 rounded-full text-xs font-semibold bg-brand-500 text-neutral-950 hover:bg-brand-400 flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
         >
           <FolderDown size={14} />
           <span>Import Music</span>

@@ -2,7 +2,7 @@ import { LyricsProvider, LyricsMatchResult } from '../../types/lyrics';
 import { calculateLyricsMatchScore } from './lyricsMatcher';
 
 const LRCLIB_BASE_URL = 'https://lrclib.net/api';
-const CLIENT_HEADER = 'NocturneMusicPlayer/1.0.0 (Linux Desktop Audio Player)';
+const CLIENT_HEADER = 'YASWAVE/1.0.0 (Cross-Platform Music Player)';
 
 export class LrclibProvider implements LyricsProvider {
   readonly name = 'LRCLIB';

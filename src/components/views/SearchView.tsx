@@ -75,7 +75,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search by title, artist, album, or genre..."
-            className="w-full bg-neutral-900 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 shadow-lg"
+            className="w-full bg-neutral-900 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-brand-500/50 shadow-lg"
             autoFocus
           />
         </div>
@@ -138,7 +138,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
                   />
 
                   <div>
-                    <h4 className="text-xl font-bold text-white truncate group-hover:text-emerald-400 transition-colors">
+                    <h4 className="text-xl font-bold text-white truncate group-hover:text-brand-400 transition-colors">
                       {topResult.title}
                     </h4>
                     <p className="text-xs text-neutral-400 mt-1">
@@ -151,7 +151,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
                       e.stopPropagation();
                       onPlayTrack(topResult, matchingTracks);
                     }}
-                    className="absolute bottom-5 right-5 w-12 h-12 rounded-full bg-emerald-500 text-neutral-950 flex items-center justify-center shadow-2xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all hover:scale-105"
+                    className="absolute bottom-5 right-5 w-12 h-12 rounded-full bg-brand-500 text-neutral-950 flex items-center justify-center shadow-2xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all hover:scale-105"
                     title="Play"
                   >
                     <Play size={22} className="fill-current ml-0.5" />

@@ -39,7 +39,7 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
       >
         <div className="h-14 px-5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ListPlus size={18} className="text-emerald-400" />
+            <ListPlus size={18} className="text-brand-400" />
             <h3 className="font-semibold text-neutral-100 text-sm">Create New Playlist</h3>
           </div>
           <button
@@ -52,11 +52,11 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
 
         {/* Quick Promo for Smart Playlists */}
         {onOpenSmartPlaylist && (
-          <div className="mx-5 mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+          <div className="mx-5 mt-4 p-3 rounded-lg bg-brand-500/10 border border-brand-500/30 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <Sparkles size={16} className="text-emerald-400 shrink-0" />
+              <Sparkles size={16} className="text-brand-400 shrink-0" />
               <div>
-                <span className="text-xs font-semibold text-emerald-300 block">Want a dynamic Smart Playlist?</span>
+                <span className="text-xs font-semibold text-brand-300 block">Want a dynamic Smart Playlist?</span>
                 <span className="text-[11px] text-neutral-400 block">Auto-generate from genres, play counts, or recently added</span>
               </div>
             </div>
@@ -66,7 +66,7 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
                 onClose();
                 onOpenSmartPlaylist();
               }}
-              className="px-2.5 py-1 rounded bg-emerald-500 text-neutral-950 font-bold text-[11px] hover:bg-emerald-400 transition-colors shrink-0 ml-2 shadow"
+              className="px-2.5 py-1 rounded bg-brand-500 text-neutral-950 font-bold text-[11px] hover:bg-brand-400 transition-colors shrink-0 ml-2 shadow"
             >
               Smart Builder
             </button>
@@ -81,7 +81,7 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Focus & Coding, Midnight Drives"
-              className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50"
+              className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-brand-500/50"
               autoFocus
               required
             />
@@ -96,7 +96,7 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Give your playlist a description..."
               rows={3}
-              className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50 resize-none"
+              className="w-full bg-neutral-950 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none focus:border-brand-500/50 resize-none"
             />
           </div>
 
@@ -111,7 +111,7 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
             <button
               type="submit"
               disabled={!name.trim()}
-              className="px-4 py-2 rounded-lg text-xs font-semibold bg-emerald-500 text-neutral-950 hover:bg-emerald-400 disabled:opacity-50 transition-colors shadow"
+              className="px-4 py-2 rounded-lg text-xs font-semibold bg-brand-500 text-neutral-950 hover:bg-brand-400 disabled:opacity-50 transition-colors shadow"
             >
               Create Standard Playlist
             </button>

@@ -1,6 +1,6 @@
 {
-  "name": "Nocturne - Desktop Music Player",
-  "description": "Advanced, extensible desktop music player for Linux with local library playback, real-time audio visualization, synchronized lyrics, and playlist management.",
+  "name": "YASWAVE",
+  "description": "A modern, cross-platform music player with synchronized lyrics and Persian translations.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

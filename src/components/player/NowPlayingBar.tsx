@@ -159,7 +159,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
         <button
           onClick={onToggleLyrics}
           className={`p-1.5 rounded-full transition-colors ${
-            isLyricsOpen ? 'text-emerald-400 bg-white/10' : 'text-neutral-400 hover:text-white'
+            isLyricsOpen ? 'text-brand-400 bg-white/10' : 'text-neutral-400 hover:text-white'
           }`}
           title="Toggle Lyrics (L)"
         >
@@ -170,7 +170,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
         <button
           onClick={onToggleVisualizer}
           className={`p-1.5 rounded-full transition-colors ${
-            isVisualizerOpen ? 'text-emerald-400 bg-white/10' : 'text-neutral-400 hover:text-white'
+            isVisualizerOpen ? 'text-brand-400 bg-white/10' : 'text-neutral-400 hover:text-white'
           }`}
           title="Toggle Visualizer (V)"
         >
@@ -181,7 +181,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
         <button
           onClick={onToggleQueue}
           className={`p-1.5 rounded-full transition-colors ${
-            isQueueOpen ? 'text-emerald-400 bg-white/10' : 'text-neutral-400 hover:text-white'
+            isQueueOpen ? 'text-brand-400 bg-white/10' : 'text-neutral-400 hover:text-white'
           }`}
           title="Play Queue"
         >
