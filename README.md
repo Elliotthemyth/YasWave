@@ -1,55 +1,196 @@
-# YASWAVE — Modern Cross-Platform Music Player
+<div align="center">
 
-YASWAVE is a modern, cross-platform music player with synchronized lyrics and Persian translations. It ships a polished, Spotify-inspired interface and is architected as a high-performance React + TypeScript application designed to be packaged natively (Linux, Windows, and Android) using **Tauri 2**.
+<img src="public/yaswave-logo.png" alt="YASWAVE" width="220" />
+
+# YASWAVE
+
+**A modern, cross-platform music player with synchronized lyrics and Persian translations.**
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06b6d4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](#license)
+
+</div>
 
 ---
 
-## Key Features
+## Screenshots
 
-1. **Local Audio Playback Engine**
-   - Centralized `AudioEngine` powered by `HTMLAudioElement` and the Web Audio API.
-   - Smooth play/pause, seeking, scrub with hover timestamp tooltips, volume slider, mute, and speed controls.
-   - True shuffle (Fisher-Yates with un-shuffle order restoration) and multi-mode repeat (`off`, `all`, `one`).
-   - Up Next queue management with drag/reorder, remove, play next, and history.
+> Captured from the running app (development build) with the three built-in demo tracks seeded on first launch.
 
-2. **Real-Time Web Audio Visualizer**
-   - Analyzes raw audio stream via `AnalyserNode`.
-   - 3 distinct visualization modes:
-     - **Frequency Bars**: Multi-band frequency spectrum with dynamic peak-falloff caps.
-     - **Waveform**: Smooth oscilloscopic time-domain line.
-     - **Radial Spectrum**: Center-pulsing circular audio spectrum.
-   - Responds to real playing audio frequencies with zero simulated or fake motion.
+| Home | Your Library |
+|---|---|
+| ![Home](docs/screenshots/home.png) | ![Library](docs/screenshots/library.png) |
 
-3. **Synchronized LRC Karaoke Lyrics**
-   - High-fidelity parser supporting `[mm:ss.xx]` and `[mm:ss.xxx]` timestamps, metadata tags, and multiline repeats.
-   - Automatic synchronized line highlighting and auto-scrolling with manual override.
-   - Live synchronization offset adjustments (±0.2s, ±1.0s, reset).
-   - In-app interactive lyrics editor with **"Stamp Current Time"** button for quick, easy lyric synchronization while listening.
-   - Support for importing local `.lrc` and `.txt` files.
+| Settings & Themes |
+|---|
+| ![Settings](docs/screenshots/settings.png) |
 
-4. **Persian Lyric Translations**
-   - Offline Persian translation service with manual per-line override.
-   - Translations are associated with parsed, synchronized lyric lines.
+---
 
-5. **Local Music & ID3 Metadata Parsing**
-   - In-browser local audio import supporting multiple file selection, folder scans (`webkitdirectory`), and drag-and-drop.
-   - Parses ID3v2, MP4, FLAC, and Vorbis tags using `music-metadata-browser` with embedded album artwork extraction.
-   - Fallback filename parser (`01 - Artist - Title.mp3`) and duration probing.
-   - In-app metadata editor for song title, artist, album, genre, year, and track number.
+## Overview
 
-6. **Persistence & Playlists**
-   - IndexedDB storage for tracks, playlists, liked songs, and user preferences.
-   - Create, rename, and delete playlists with track additions and removals.
-   - Automated collections for **Liked Songs** and **Recently Played**.
+YASWAVE is a polished, Spotify-inspired desktop music player. It plays your local audio files, extracts their metadata and cover art, fetches and synchronizes lyrics (with optional Persian translations), renders a real-time audio visualizer, and manages playlists — all offline-first, with local persistence.
 
-7. **Themes & Desktop Aesthetic**
-   - GTK-styled window titlebar with environment status badge and controls.
-   - Themes: Dark Charcoal, OLED Midnight, and Daylight.
-   - Accent colors: YASWAVE Turquoise (default, from the logo), YASWAVE Violet, Nordic Cyan, Analog Amber, Velvet Rose, Monochrome.
-   - Keyboard shortcuts: `Space` (Play/Pause), `←`/`→` (Seek ±5s / Shift for ±15s), `↑`/`↓` (Volume), `M` (Mute), `L` (Lyrics), `V` (Visualizer), `Ctrl+F` (Search), `Esc` (Close overlays).
+It is built as a **React + TypeScript + Vite** web application that is architected to be packaged natively for **Linux, Windows and Android** using **Tauri 2**. The whole data layer, filesystem access and persistence sit behind clean adapters so the same UI runs both in the browser and inside a native shell.
 
-8. **In-App Test Suite & Diagnostics**
-   - Access **Diagnostics & Tests** directly in the sidebar or run `npm test` to verify LRC parsing, queue transitions, shuffle logic, metadata cleaners, and persistence serialization.
+---
+
+## Features
+
+- **Local audio playback engine** — `HTMLAudioElement` + Web Audio API, with play/pause, seek/scrub, volume, mute, speed, true Fisher-Yates shuffle (with un-shuffle order restore) and repeat modes (`off` / `all` / `one`).
+- **Queue management** — Up Next queue with reorder, remove, play-next, play-now and history.
+- **Real-time visualizer** — `AnalyserNode`-driven Frequency Bars, Waveform and Radial Spectrum modes.
+- **Synchronized LRC lyrics** — high-fidelity parser (`[mm:ss.xx]` / `[mm:ss.xxx]`), metadata tags, multi-timestamp lines, auto-scroll with manual override, ±0.2s / ±1.0s sync offset controls, and an in-app editor with a **"Stamp Current Time"** button.
+- **Persian lyric translations** — offline translation service with per-line manual override, associated to the synchronized lines.
+- **Online lyrics discovery** — LRCLIB provider with candidate scoring and duration-aware matching.
+- **Local library & metadata** — multi-file import, folder scan (`webkitdirectory`) and drag-and-drop; ID3v2 / MP4 / FLAC / Vorbis parsing via `music-metadata-browser` with embedded artwork; filename fallback parsing; in-app metadata editor.
+- **Playlists** — static and smart (rule-based) playlists, plus auto collections (**Liked Songs**, **Recently Played**).
+- **Themes & accents** — Dark Charcoal, OLED Midnight and Daylight themes; six accent colors (default **Turquoise**, taken from the logo).
+- **Keyboard shortcuts** — `Space` play/pause, `←`/`→` seek (±5s, `Shift` ±15s), `↑`/`↓` volume, `M` mute, `L` lyrics, `V` visualizer, `Q` queue, `S` shuffle, `R` repeat, `Ctrl/⌘+F` search, `?` shortcuts, `Esc` close.
+- **In-app diagnostics & tests** — a Diagnostics view plus a Vitest suite for the parser, matching, queue and persistence logic.
+
+---
+
+## Screenshots & Branding
+
+The app ships the YASWAVE logo (turquoise waveform "YW" monogram) under `public/`:
+
+| Asset | Path | Use |
+|---|---|---|
+| Full lockup | `public/yaswave-logo.png` (1024×1024) | Splash / about / README |
+| Mark (transparent) | `public/yaswave-mark.png` (1024×1024) | Sidebar + window titlebar |
+| Favicon | `public/favicon.png` (128×128) | Browser tab icon |
+
+The brand color (`brand`, default `#19bebe`) is defined as a Tailwind theme token in `src/index.css` and as the default accent in `src/config/appConfig.ts`.
+
+---
+
+## Tech Stack
+
+| Layer | Choice |
+|---|---|
+| UI | React 19, TypeScript 7 |
+| Build | Vite 8 (`@vitejs/plugin-react`) |
+| Styling | Tailwind CSS 4 (`@tailwindcss/vite`) |
+| Animation | `motion` |
+| Icons | `lucide-react` |
+| Metadata | `music-metadata-browser` |
+| Persistence | IndexedDB (adapter-based) |
+| Tests | Vitest 5 |
+| Native packaging (planned) | Tauri 2 |
+
+---
+
+## Architecture
+
+The project keeps the data model, filesystem adapters, persistence and UI strictly separated:
+
+```
+src/
+├── types/              # Clean interfaces (Track, Playlist, PlaybackState, FileAdapter…)
+├── config/             # APP_CONFIG branding, accent palette, demo tracks
+├── services/
+│   ├── audio/          # AudioEngine, VisualizerEngine, SynthAudioGenerator
+│   ├── metadata/       # ID3/Vorbis parser + audio-element duration fallback
+│   ├── storage/        # IndexedDB repository (swappable for SQLite in Tauri)
+│   ├── filesystem/     # FileAdapter boundary:
+│   │   ├── browserFileAdapter.ts   # browser session cache & object URLs
+│   │   └── tauriFileAdapter.ts     # Tauri 2 native adapter with scoped paths
+│   ├── lyrics/         # LRC parser/synchronizer + LRCLIB provider + Persian translations
+│   └── playlist/       # Smart-playlist rule evaluator
+├── hooks/              # useAudioEngine, useLibrary, useTheme, useKeyboardShortcuts
+└── components/         # layout, player, views, visualizer, modals
+```
+
+On first launch the app seeds **three built-in synthesized demo tracks** (see `src/config/defaultTracks.ts`) so the player, queue, visualizer and lyric sync are usable without importing any files.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js 20+** or **Bun 1.x** (the repo is locked with `bun.lock`, so [Bun](https://bun.sh) is recommended)
+- A modern browser (for preview) or the platform toolchain below for native builds
+
+### Install & run
+
+```bash
+# 1. Install dependencies
+bun install            # or: npm install
+
+# 2. Start the dev server (http://localhost:3000)
+bun run dev
+
+# 3. Type-check
+bun run lint           # tsc --noEmit
+
+# 4. Run the unit tests
+bun test               # vitest run
+
+# 5. Production build (outputs to dist/)
+bun run build
+
+# 6. Preview the production build
+bun run preview
+```
+
+The npm scripts are equivalent if you prefer npm/pnpm:
+
+```bash
+npm run dev / lint / test / build / preview
+```
+
+---
+
+## Packaging as a Desktop App (Tauri 2)
+
+> **Status:** only the web application is configured and verified in this repository. The native platform scaffolds below are **not** present yet and **no Windows or Android build has been produced or published**. Use this section as the setup guide.
+
+### 1. Add the Tauri CLI and APIs
+
+```bash
+bun add -d @tauri-apps/cli
+bun add @tauri-apps/api @tauri-apps/plugin-dialog @tauri-apps/plugin-fs
+```
+
+### 2. Initialize Tauri
+
+```bash
+bunx tauri init
+```
+
+Configure `src-tauri/tauri.conf.json`:
+
+- `productName`: `YASWAVE`
+- `identifier`: `com.yaswave.music`
+- `build.devUrl`: `http://localhost:3000`
+- `build.frontendDist`: `../dist`
+- `app.windows[].decorations`: `false` to use YASWAVE's own titlebar, or `true` for the native frame
+- `bundle.publisher`: `YASWAVE`
+
+### 3. Generate the platform icon set
+
+```bash
+bunx tauri icon public/yaswave-mark.png   # writes src-tauri/icons/*
+```
+
+This produces `icon.ico` (Windows), `icon.icns` (macOS), the Linux PNGs and the Android mipmaps from the master mark.
+
+### 4. Build per platform
+
+| Platform | Command | Bundle outputs | Status |
+|---|---|---|---|
+| Linux | `bunx tauri build` | `.deb`, `.AppImage`, `.rpm` | not built |
+| Windows | `bunx tauri build` (on Windows) | `.msi` / NSIS `.exe` | not built |
+| Android | `bunx tauri android init && bunx tauri android build` | `.apk` / `.aab` | not built |
+
+Set the Android label to `YASWAVE` in `src-tauri/gen/android/app/src/main/res/values/strings.xml` after `android init`.
+
+Compiled desktop binaries land in `src-tauri/target/release/bundle/`.
 
 ---
 
@@ -57,126 +198,46 @@ YASWAVE is a modern, cross-platform music player with synchronized lyrics and Pe
 
 | Property | Value |
 |---|---|
-| Product name | `YASWAVE` |
-| Display name | `YASWAVE` |
+| Product / display name | `YASWAVE` |
 | Description | A modern, cross-platform music player with synchronized lyrics and Persian translations. |
-| Visual identity | Modern, premium, music-focused, Spotify-inspired |
-| npm package name | `yaswave` (private) |
+| npm package | `yaswave` (private) |
 | Rust crate / Tauri bundle identifier | `yaswave` |
-| Desktop application identifier | `com.yaswave.music` |
-| Android application ID | `com.yaswave.music` |
+| Desktop & Android application ID | `com.yaswave.music` |
+| Default accent | `#19bebe` (Turquoise, from the logo) |
+| Persistence namespace | `nocturne_music_db` / `nocturne_` (kept for data compatibility) |
 
-The single source of truth for in-app branding is [`src/config/appConfig.ts`](./src/config/appConfig.ts) (`APP_CONFIG.name` / `APP_CONFIG.tagline`), consumed by the titlebar, sidebar, and settings.
-
----
-
-## Architectural Separation & Tauri 2 Integration
-
-YASWAVE strictly isolates the data model, filesystem adapters, persistence layer, and React UI:
-
-```
-src/
-├── types/              # Clean TypeScript interfaces (Track, Playlist, PlaybackState, FileAdapter)
-├── config/             # App name, branding tokens, and initial ambient tracks
-├── services/
-│   ├── audio/          # Central AudioEngine, VisualizerEngine, SynthAudioGenerator
-│   ├── metadata/       # ID3/Vorbis parser with audio element duration fallback
-│   ├── storage/        # Browser IndexedDB repository (swappable for SQLite in Tauri)
-│   ├── filesystem/     # FileAdapter boundary:
-│   │   ├── browserFileAdapter.ts   # Browser session file cache & object URLs
-│   │   └── tauriFileAdapter.ts     # Tauri 2 native desktop adapter with scoped paths
-│   └── lyrics/         # LRC timestamp parser, synchronizer, and formatter
-├── hooks/              # useAudioEngine, useLibrary, useTheme, useKeyboardShortcuts
-└── components/         # Modular layout, player, view, visualizer, and modal components
-```
-
-### Packaging into Tauri 2
-
-To build a native desktop binary:
-
-1. **Install Tauri CLI**:
-   ```bash
-   npm install --save-dev @tauri-apps/cli
-   npm install @tauri-apps/api @tauri-apps/plugin-dialog @tauri-apps/plugin-fs
-   ```
-
-2. **Initialize Tauri 2**:
-   ```bash
-   npx tauri init
-   ```
-
-3. **Configure `tauri.conf.json`** with the YASWAVE identity:
-   - `productName`: `YASWAVE`
-   - `identifier`: `com.yaswave.music`
-   - `build.devUrl`: `http://localhost:3000`
-   - `build.frontendDist`: `../dist`
-   - Window: `decorations: false` (to use YASWAVE's native desktop titlebar) or `decorations: true`
-   - Bundle targets: configure `deb`/`appimage`/`rpm` for Linux and `msi`/`nsis` for Windows with `publisher: "YASWAVE"`.
-   - Permissions: configure scoped access in `src-tauri/capabilities/default.json` for reading user-selected music directories via `plugin-dialog`.
-
-4. **Build the Native Desktop Package**:
-   ```bash
-   npm run tauri build
-   ```
-   The compiled binaries will be in `src-tauri/target/release/bundle/`.
-
-### Android (Tauri 2)
-
-Tauri 2 supports Android targets (`npm run tauri android init` / `tauri android build`) once the Tauri scaffold exists. When initialized, set:
-- `tauri.conf.json` → `identifier: "com.yaswave.music"`, `productName: "YASWAVE"`
-- Android app label → `YASWAVE` in `src-tauri/gen/android/app/src/main/res/values/strings.xml`
-
-> **Status:** Android and Windows builds have **not** been configured or verified in this repository. Only the web application and its build are currently validated. This section documents the intended identity; no platform build is claimed to work.
-
-### Branding Assets
-
-The web application ships the YASWAVE logo (turquoise waveform "YW" monogram) in `public/`:
-
-| Asset | Path | Purpose |
-|---|---|---|
-| Full logo lockup | `public/yaswave-logo.png` (1024×1024) | Splash / about / store listings |
-| Mark (transparent) | `public/yaswave-mark.png` (1024×1024) | Sidebar & window titlebar |
-| Favicon | `public/favicon.png` (128×128) | Browser tab icon |
-
-The mark is used in the sidebar (`src/components/layout/Sidebar.tsx`) and titlebar (`src/components/layout/DesktopTitleBar.tsx`), and as the favicon via `index.html`.
-
-**Still required for native packaging** — the platform icon set has not been generated yet. Produce it from the master mark once `src-tauri/` exists:
-
-| Asset | Purpose | Minimum size |
-|---|---|---|
-| `icon.png` (1024×1024, RGBA) | Tauri master app icon source | 1024×1024 |
-| `32x32.png`, `128x128.png`, `128x128@2x.png` | Linux/Windows desktop icons | 128×128 |
-| `icon.ico` | Windows bundle icon | 256×256 (multi-size ICO) |
-| `icon.icns` | macOS bundle icon | 512×512 |
-| Android mipmap set (`mdpi`…`xxxhdpi`) | Android launcher icons | 48–192 px per density |
-
-Generate with `npx tauri icon public/yaswave-mark.png` into `src-tauri/icons/`.
+The single source of truth for in-app branding is [`src/config/appConfig.ts`](src/config/appConfig.ts).
 
 ---
 
-## Known Browser Sandbox Limitations vs. Desktop Build
+## Browser Preview vs. Native Build
 
-| Feature | Browser Preview Mode | Native Desktop (Tauri 2) |
+| Feature | Browser preview | Native (Tauri 2) |
 |---|---|---|
-| **Filesystem Access** | Sandboxed; files selected via input/drag-and-drop are held in memory for the browser session. | Direct filesystem path access via native file dialogs. |
-| **Path Durability** | Object URLs (`blob:`) expire when tab is closed; metadata persists in IndexedDB. | File paths persist permanently in SQLite. |
-| **Media Keys / MPRIS** | Standard web keyboard events. | Native Linux MPRIS D-Bus integration for hardware media keys and notification daemon integration. |
-| **Window Frame** | Rendered inside web viewport with mock GTK header controls. | Native Wayland / X11 / Windows window management and minimize/maximize/close signals. |
+| Filesystem access | Sandboxed; picked files live in the session | Direct OS paths via native dialogs |
+| Path durability | `blob:` URLs expire with the tab; metadata persists in IndexedDB | Paths persist in SQLite |
+| Media keys | Standard web keyboard events | Linux MPRIS / OS media-key integration |
+| Window frame | In-app mock titlebar | Native window management & controls |
 
 ---
 
-## Development Commands
+## License
+
+Apache-2.0.
+
+---
+
+## نمای کلی (فارسی)
+
+**YASWAVE** یک پخشکنندهٔ موسیقی مدرن و چندسکویی است که با React + TypeScript + Vite ساخته شده و برای بستهبندی با Tauri 2 روی لینوکس، ویندوز و اندروید آماده است. امکانات: پخش فایلهای صوتی محلی، خواندن متادیتا و کاور آلبوم، ویژوالایزر بلادرنگ، لیریک همگام با ترجمهٔ فارسی، جستوجوی آنلاین لیریک، پلیلیستهای ساده و هوشمند، تمها و رنگهای اکسنت (پیشفرض فیروزهای برگرفته از لوگو) و ذخیرهسازی محلی.
+
+اجرا در حالت توسعه:
 
 ```bash
-# Start local development server on port 3000
-npm run dev
-
-# Run TypeScript compilation check
-npm run lint
-
-# Run unit tests via Vitest
-npm test
-
-# Build production bundle
-npm run build
+bun install
+bun run dev      # http://localhost:3000
+bun test         # تستها
+bun run build    # خروجی در dist/
 ```
+
+نسخهٔ وب بهطور کامل تست شده است؛ ساخت نسخهٔ ویندوز و اندروید هنوز پیکربندی نشده و هیچ بیلد بومی منتشر نشده است.
