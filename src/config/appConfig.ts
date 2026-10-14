@@ -24,7 +24,7 @@ export const APP_CONFIG = {
   defaultVolume: 0.8,
   accentColors: {
     brand: {
-      name: 'YASWAVE Turquoise',
+      name: 'Turquoise',
       primary: '#19bebe',
       hover: '#12a0a0',
       border: 'border-brand-500/30',
@@ -33,7 +33,7 @@ export const APP_CONFIG = {
       glow: 'rgba(25, 190, 190, 0.25)',
     },
     violet: {
-      name: 'YASWAVE Violet',
+      name: 'Violet',
       primary: '#8b5cf6',
       hover: '#7c3aed',
       border: 'border-violet-500/30',
