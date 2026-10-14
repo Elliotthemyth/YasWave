@@ -69,7 +69,7 @@ export function extractWordTimings(rawContent: string): { words?: WordTiming[]; 
     }
   }
 
-  const cleanText = rawContent.replace(/<\d{1,3}:\d{2}(?:\.\d{1,3})?>/g, '').trim();
+  const cleanText = rawContent.replace(/<\d{1,3}:\d{2}(?:\.\d{1,3})?>/g, ' ').trim();
 
   return {
     words: words.length > 0 ? words : undefined,

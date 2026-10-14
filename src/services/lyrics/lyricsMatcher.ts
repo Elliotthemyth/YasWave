@@ -7,6 +7,7 @@
 export function normalizeString(str: string): string {
   return str
     .toLowerCase()
+    .replace(/['\u2019`]/g, '')
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
