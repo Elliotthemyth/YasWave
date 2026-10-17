@@ -24,22 +24,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Setup Rust Stable
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install Frontend Dependencies
-        run: npm ci || npm install
+        run: bun install --frozen-lockfile
 
       - name: Build Web Frontend
-        run: npm run build
+        run: bun run build
 
       - name: Build Windows Binaries via Tauri
-        run: npx tauri build
+        run: bunx tauri build
 
       - name: Upload Windows Artifacts
         uses: actions/upload-artifact@v4
@@ -66,22 +64,20 @@ jobs:
             libwebkit2gtk-4.1-dev build-essential curl wget file \
             libssl-dev libayatana-appindicator3-dev librsvg2-dev
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Setup Rust Stable
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install Frontend Dependencies
-        run: npm ci || npm install
+        run: bun install --frozen-lockfile
 
       - name: Build Web Frontend
-        run: npm run build
+        run: bun run build
 
       - name: Build Linux Bundles via Tauri
-        run: npx tauri build --bundles appimage,deb
+        run: bunx tauri build --bundles appimage,deb
 
       - name: Upload Linux Artifacts
         uses: actions/upload-artifact@v4
@@ -123,18 +119,16 @@ jobs:
         with:
           targets: aarch64-linux-android
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install Frontend Dependencies
-        run: npm ci || npm install
+        run: bun install --frozen-lockfile
 
       - name: Build Android APK via Tauri
         run: |
           export NDK_HOME="$ANDROID_HOME/ndk/26.1.10909125"
-          npx tauri android build --apk --target aarch64 --debug
+          bunx tauri android build --apk --target aarch64 --debug
 
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
