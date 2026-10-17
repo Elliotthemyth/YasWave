@@ -1,0 +1,15 @@
+{
+  "appId": "com.elliotthemyth.yaswave",
+  "appName": "YasWave",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  }
+}
