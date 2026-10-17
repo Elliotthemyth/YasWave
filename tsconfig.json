@@ -1,4 +1,9 @@
 {
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src-tauri"
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "experimentalDecorators": true,

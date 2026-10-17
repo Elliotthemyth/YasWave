@@ -6,3 +6,11 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Android signing (local only)
+src-tauri/gen/android/keystore.properties
+*.jks
+*.keystore
+artifacts/
+src-tauri/target/
+src-tauri/gen/android/.gradle/

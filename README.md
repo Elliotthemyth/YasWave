@@ -80,7 +80,7 @@ The brand color (`brand`, default `#19bebe`) is defined as a Tailwind theme toke
 | Metadata | `music-metadata-browser` |
 | Persistence | IndexedDB (adapter-based) |
 | Tests | Vitest 5 |
-| Native packaging (planned) | Tauri 2 |
+| Native packaging | Tauri 2 (Windows, Android) |
 
 ---
 
@@ -146,51 +146,68 @@ npm run dev / lint / test / build / preview
 
 ---
 
-## Packaging as a Desktop App (Tauri 2)
+## Packaging as a Native App (Tauri 2)
 
-> **Status:** only the web application is configured and verified in this repository. The native platform scaffolds below are **not** present yet and **no Windows or Android build has been produced or published**. Use this section as the setup guide.
+> **Status:** the native scaffolds are configured in this repository and both target builds have been produced from it: a **Windows x64** portable `.exe` plus NSIS installer, and a **signed Android arm64** release APK. macOS/iOS/Linux bundles are not produced yet.
 
-### 1. Add the Tauri CLI and APIs
+### Layout
 
-```bash
-bun add -d @tauri-apps/cli
-bun add @tauri-apps/api @tauri-apps/plugin-dialog @tauri-apps/plugin-fs
-```
+| Path | Purpose |
+|---|---|
+| `src-tauri/` | Rust crate (`yaswave_lib`), `tauri.conf.json`, capabilities, icon set |
+| `src-tauri/gen/android/` | Generated Gradle project (`bunx tauri android init`) |
+| `.github/workflows/build-all.yml` | CI builds for Windows / Linux / Android |
 
-### 2. Initialize Tauri
+### Build commands
 
-```bash
-bunx tauri init
-```
+| Platform | Command | Output |
+|---|---|---|
+| Web | `bun run build` | `dist/` |
+| Android | `bunx tauri android build --apk --target aarch64` | `src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk` |
+| Windows (on Windows) | `bunx tauri build` | `src-tauri/target/release/bundle/nsis/*.exe`, `bundle/msi/*.msi` |
+| Windows (cross-compiled from Linux) | see below | portable `.exe` + `bundle/nsis/*-setup.exe` |
 
-Configure `src-tauri/tauri.conf.json`:
+### Android prerequisites
 
-- `productName`: `YASWAVE`
-- `identifier`: `com.yaswave.music`
-- `build.devUrl`: `http://localhost:3000`
-- `build.frontendDist`: `../dist`
-- `app.windows[].decorations`: `false` to use YASWAVE's own titlebar, or `true` for the native frame
-- `bundle.publisher`: `YASWAVE`
-
-### 3. Generate the platform icon set
+JDK 17, Android SDK platform 36 + build-tools 36.1.0, NDK 26.1.10909125, and the Rust targets `aarch64-linux-android`, `armv7-linux-androideabi`, `i686-linux-android`, `x86_64-linux-android`.
 
 ```bash
-bunx tauri icon public/yaswave-mark.png   # writes src-tauri/icons/*
+export JAVA_HOME=/path/to/jdk17
+export ANDROID_HOME=/path/to/android-sdk
+export NDK_HOME="$ANDROID_HOME/ndk/26.1.10909125"
+
+bun install
+bunx tauri android init --ci          # only needed once
+bunx tauri android build --apk --target aarch64
 ```
 
-This produces `icon.ico` (Windows), `icon.icns` (macOS), the Linux PNGs and the Android mipmaps from the master mark.
+Release builds are signed from `src-tauri/gen/android/keystore.properties` (git-ignored):
 
-### 4. Build per platform
+```properties
+storeFile=/absolute/path/to/release.jks
+storePassword=…
+keyAlias=yaswave
+keyPassword=…
+```
 
-| Platform | Command | Bundle outputs | Status |
-|---|---|---|---|
-| Linux | `bunx tauri build` | `.deb`, `.AppImage`, `.rpm` | not built |
-| Windows | `bunx tauri build` (on Windows) | `.msi` / NSIS `.exe` | not built |
-| Android | `bunx tauri android init && bunx tauri android build` | `.apk` / `.aab` | not built |
+Without that file Gradle produces an unsigned release APK; use `--debug` for a debug-signed build.
 
-Set the Android label to `YASWAVE` in `src-tauri/gen/android/app/src/main/res/values/strings.xml` after `android init`.
+### Cross-compiling Windows from Linux
 
-Compiled desktop binaries land in `src-tauri/target/release/bundle/`.
+Tauri can cross-compile the Windows binary from Linux with [`cargo-xwin`](https://github.com/rust-cross/cargo-xwin). It needs LLVM 18+ (`clang-cl`, `lld-link`, `llvm-rc`), the `x86_64-pc-windows-msvc` Rust target, and — for the installer — a Linux `makensis` on `PATH` (NSIS package).
+
+```bash
+rustup target add x86_64-pc-windows-msvc
+export PATH="$LLVM_BIN:$PATH"          # clang-cl / lld-link / llvm-rc
+
+# portable executable only
+bunx tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc --no-bundle
+
+# portable executable + NSIS installer
+bunx tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc --bundles nsis
+```
+
+Outputs land in `src-tauri/target/x86_64-pc-windows-msvc/release/`. The `.msi` target additionally needs WiX on a Windows host, and the installer stays unsigned unless a signing command is configured in `bundle > windows > sign_command`.
 
 ---
 
@@ -240,4 +257,4 @@ bun test         # تستها
 bun run build    # خروجی در dist/
 ```
 
-نسخهٔ وب بهطور کامل تست شده است؛ ساخت نسخهٔ ویندوز و اندروید هنوز پیکربندی نشده و هیچ بیلد بومی منتشر نشده است.
+نسخهٔ وب به‌طور کامل تست شده است و بیلدهای بومی ویندوز (فایل اجرایی پرتابل + نصب‌کنندهٔ NSIS) و اندروید (APK امضاشده برای arm64) نیز ساخته شده‌اند؛ خروجی‌ها در پوشهٔ `artifacts/` قرار دارند.
