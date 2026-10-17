@@ -172,11 +172,11 @@ jobs:
             - Android (arm64): installable debug-signed APK
 
             Android release APKs require a local signing key (see `src-tauri/gen/android/keystore.properties`).
+          fail_on_unmatched_files: true
           files: |
-            release-assets/android/*.apk
-            release-assets/windows/*.exe
-            release-assets/windows/*.msi
-            release-assets/linux/*.AppImage
-            release-assets/linux/*.deb
+            release-assets/android/**/*.apk
+            release-assets/windows/**/*.exe
+            release-assets/linux/**/*.AppImage
+            release-assets/linux/**/*.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
