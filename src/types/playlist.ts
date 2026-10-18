@@ -9,7 +9,9 @@ export type SmartRuleField =
   | 'duration'
   | 'year'
   | 'isFavorite'
-  | 'hasLyrics';
+  | 'hasLyrics'
+  | 'bpm'
+  | 'key';
 
 export type SmartRuleOperator =
   | 'contains'
@@ -43,6 +45,8 @@ export type SmartSortField =
   | 'album'
   | 'duration'
   | 'year'
+  | 'bpm'
+  | 'key'
   | 'random';
 
 export interface SmartPlaylistConfig {

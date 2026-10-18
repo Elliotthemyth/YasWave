@@ -10,6 +10,7 @@ import {
   FolderPlus,
   Copy,
   Music,
+  Activity,
 } from 'lucide-react';
 
 export interface ContextMenuProps {
@@ -26,6 +27,7 @@ export interface ContextMenuProps {
   onRemoveFromPlaylist?: (playlistId: string, trackId: string) => void;
   onToggleFavorite: (trackId: string) => void;
   onEditMetadata: (track: Track) => void;
+  onAnalyzeAudio?: (trackId: string) => void;
   onDeleteTrack: (trackId: string) => void;
 }
 
@@ -43,6 +45,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   onRemoveFromPlaylist,
   onToggleFavorite,
   onEditMetadata,
+  onAnalyzeAudio,
   onDeleteTrack,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
@@ -60,7 +63,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   // Adjust position so it doesn't clip viewport
   const adjustedX = Math.min(x, window.innerWidth - 220);
-  const adjustedY = Math.min(y, window.innerHeight - 320);
+  const adjustedY = Math.min(y, window.innerHeight - 340);
 
   return (
     <div
@@ -171,6 +174,20 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         />
         <span>{track.isFavorite ? 'Remove from Favorites' : 'Save to Favorites'}</span>
       </button>
+
+      {onAnalyzeAudio && (
+        <button
+          onClick={() => {
+            onAnalyzeAudio(track.id);
+            onClose();
+          }}
+          className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md hover:bg-white/10 hover:text-emerald-400 transition-colors text-left"
+          title="Detect BPM and Musical Key from audio stream"
+        >
+          <Activity size={14} className="text-emerald-400" />
+          <span>Calculate BPM & Key</span>
+        </button>
+      )}
 
       <button
         onClick={() => {

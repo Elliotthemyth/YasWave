@@ -18,6 +18,10 @@ import {
   getSmartPlaylistPresets,
 } from '../../services/playlist/smartPlaylistEvaluator';
 import { SmartPlaylistConfig } from '../../types/playlist';
+import {
+  calculateBpmFromChannelData,
+  calculateKeyFromChannelData,
+} from '../../services/audio/audioAnalyzer';
 import { CheckCircle2, XCircle, Play, RefreshCw, Terminal } from 'lucide-react';
 
 interface TestCaseResult {
@@ -398,6 +402,69 @@ export const DiagnosticsView: React.FC = () => {
       const desc = describeSmartPlaylistRules(config);
       if (!desc.includes('Genre contains "Electronic"') || !desc.includes('Limit 25')) {
         throw new Error(`Unexpected rule description: ${desc}`);
+      }
+    });
+
+    // 6. Audio DSP: BPM & Harmonic Key Analysis
+    run('Audio DSP & Harmonic Analysis', 'calculateBpmFromChannelData accurately calculates BPM from rhythmic energy pulses', () => {
+      const sampleRate = 44100;
+      const duration = 10;
+      const totalSamples = sampleRate * duration;
+      const samples = new Float32Array(totalSamples);
+      const beatIntervalSamples = Math.round(sampleRate * (60 / 120)); // 120 BPM
+
+      for (let beat = 0; beat < duration * 2; beat++) {
+        const beatStart = beat * beatIntervalSamples;
+        const burstLength = Math.round(sampleRate * 0.04);
+        for (let j = 0; j < burstLength && beatStart + j < totalSamples; j++) {
+          const t = j / sampleRate;
+          samples[beatStart + j] = Math.sin(2 * Math.PI * 100 * t) * (1 - j / burstLength);
+        }
+      }
+
+      const calculated = calculateBpmFromChannelData(samples, sampleRate);
+      if (Math.abs(calculated - 120) > 2) {
+        throw new Error(`Expected BPM near 120, got ${calculated}`);
+      }
+    });
+
+    run('Audio DSP & Harmonic Analysis', 'calculateKeyFromChannelData accurately detects C Major & Camelot 8B from harmonic triad', () => {
+      const sampleRate = 44100;
+      const duration = 3;
+      const totalSamples = sampleRate * duration;
+      const samples = new Float32Array(totalSamples);
+
+      for (let i = 0; i < totalSamples; i++) {
+        const t = i / sampleRate;
+        samples[i] =
+          0.4 * Math.sin(2 * Math.PI * 261.63 * t) +
+          0.3 * Math.sin(2 * Math.PI * 329.63 * t) +
+          0.3 * Math.sin(2 * Math.PI * 392.00 * t);
+      }
+
+      const res = calculateKeyFromChannelData(samples, sampleRate);
+      if (res.key !== 'C Major' || res.camelot !== '8B') {
+        throw new Error(`Expected C Major (8B), got ${res.key} (${res.camelot})`);
+      }
+    });
+
+    run('Audio DSP & Harmonic Analysis', 'calculateKeyFromChannelData accurately detects A Minor & Camelot 8A from harmonic triad', () => {
+      const sampleRate = 44100;
+      const duration = 3;
+      const totalSamples = sampleRate * duration;
+      const samples = new Float32Array(totalSamples);
+
+      for (let i = 0; i < totalSamples; i++) {
+        const t = i / sampleRate;
+        samples[i] =
+          0.4 * Math.sin(2 * Math.PI * 220.00 * t) +
+          0.3 * Math.sin(2 * Math.PI * 261.63 * t) +
+          0.3 * Math.sin(2 * Math.PI * 329.63 * t);
+      }
+
+      const res = calculateKeyFromChannelData(samples, sampleRate);
+      if (res.key !== 'A Minor' || res.camelot !== '8A') {
+        throw new Error(`Expected A Minor (8A), got ${res.key} (${res.camelot})`);
       }
     });
 

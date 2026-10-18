@@ -91,6 +91,7 @@ export default function App() {
     deletePlaylist,
     addTrackToPlaylist,
     removeTrackFromPlaylist,
+    analyzeTrackAudio,
     reloadData,
   } = useLibrary();
 
@@ -507,6 +508,7 @@ export default function App() {
         onSave={(trackId, updates) => {
           updateTrack(trackId, updates);
         }}
+        onAnalyzeAudio={analyzeTrackAudio}
       />
 
       {/* 9. Create Playlist Modal */}
@@ -549,6 +551,7 @@ export default function App() {
           onRemoveFromPlaylist={removeTrackFromPlaylist}
           onToggleFavorite={toggleFavorite}
           onEditMetadata={(t) => setEditingTrack(t)}
+          onAnalyzeAudio={analyzeTrackAudio}
           onDeleteTrack={deleteTrack}
         />
       )}

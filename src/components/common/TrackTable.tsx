@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Track } from '../../types/track';
 import { TrackRow } from './TrackRow';
-import { Clock, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Clock, ArrowUpDown, ArrowUp, ArrowDown, Activity, Key as KeyIcon } from 'lucide-react';
 
 interface TrackTableProps {
   tracks: Track[];
@@ -11,12 +11,15 @@ interface TrackTableProps {
   onTogglePlay: () => void;
   onToggleFavorite: (trackId: string) => void;
   onOpenContextMenu: (e: React.MouseEvent, track: Track) => void;
+  onAnalyzeTrack?: (trackId: string) => void;
   showAlbum?: boolean;
   showDateAdded?: boolean;
+  showBpm?: boolean;
+  showKey?: boolean;
   emptyMessage?: string;
 }
 
-type SortField = 'custom' | 'title' | 'artist' | 'album' | 'dateAdded' | 'duration';
+type SortField = 'custom' | 'title' | 'artist' | 'album' | 'dateAdded' | 'duration' | 'bpm' | 'key';
 type SortDirection = 'asc' | 'desc';
 
 export const TrackTable: React.FC<TrackTableProps> = ({
@@ -27,8 +30,11 @@ export const TrackTable: React.FC<TrackTableProps> = ({
   onTogglePlay,
   onToggleFavorite,
   onOpenContextMenu,
+  onAnalyzeTrack,
   showAlbum = true,
   showDateAdded = true,
+  showBpm = true,
+  showKey = true,
   emptyMessage = 'No tracks found.',
 }) => {
   const [sortField, setSortField] = useState<SortField>('custom');
@@ -62,6 +68,10 @@ export const TrackTable: React.FC<TrackTableProps> = ({
         comparison = a.duration - b.duration;
       } else if (sortField === 'dateAdded') {
         comparison = a.dateAdded - b.dateAdded;
+      } else if (sortField === 'bpm') {
+        comparison = (a.bpm || 0) - (b.bpm || 0);
+      } else if (sortField === 'key') {
+        comparison = (a.key || '').localeCompare(b.key || '');
       }
 
       return sortDir === 'asc' ? comparison : -comparison;
@@ -87,16 +97,16 @@ export const TrackTable: React.FC<TrackTableProps> = ({
     );
   };
 
+  const gridColumns = `40px minmax(180px, 3fr) ${showAlbum ? 'minmax(130px, 2fr)' : ''} ${
+    showBpm ? '70px' : ''
+  } ${showKey ? '95px' : ''} ${showDateAdded ? '110px' : ''} 85px 40px`;
+
   return (
     <div className="w-full">
       {/* Table Header */}
       <div
         className="grid items-center px-4 py-2 border-b border-white/10 text-xs font-medium text-neutral-400 select-none uppercase tracking-wider mb-1"
-        style={{
-          gridTemplateColumns: `40px minmax(200px, 3fr) ${showAlbum ? 'minmax(140px, 2fr)' : ''} ${
-            showDateAdded ? '120px' : ''
-          } 90px 40px`,
-        }}
+        style={{ gridTemplateColumns: gridColumns }}
       >
         <div className="pl-1">#</div>
 
@@ -115,6 +125,30 @@ export const TrackTable: React.FC<TrackTableProps> = ({
           >
             <span>Album</span>
             {renderSortIndicator('album')}
+          </button>
+        )}
+
+        {showBpm && (
+          <button
+            onClick={() => handleSort('bpm')}
+            className="group/col flex items-center text-left hover:text-white transition-colors cursor-pointer"
+            title="Beats Per Minute"
+          >
+            <Activity size={12} className="mr-1 text-neutral-500 group-hover/col:text-emerald-400" />
+            <span>BPM</span>
+            {renderSortIndicator('bpm')}
+          </button>
+        )}
+
+        {showKey && (
+          <button
+            onClick={() => handleSort('key')}
+            className="group/col flex items-center text-left hover:text-white transition-colors cursor-pointer"
+            title="Musical Key (Standard & Camelot Wheel)"
+          >
+            <KeyIcon size={12} className="mr-1 text-neutral-500 group-hover/col:text-emerald-400" />
+            <span>Key</span>
+            {renderSortIndicator('key')}
           </button>
         )}
 
@@ -152,8 +186,11 @@ export const TrackTable: React.FC<TrackTableProps> = ({
             onTogglePlay={onTogglePlay}
             onToggleFavorite={onToggleFavorite}
             onOpenContextMenu={onOpenContextMenu}
+            onAnalyzeTrack={onAnalyzeTrack}
             showAlbum={showAlbum}
             showDateAdded={showDateAdded}
+            showBpm={showBpm}
+            showKey={showKey}
           />
         ))}
       </div>

@@ -98,6 +98,43 @@ export function evaluateSmartRule(track: Track, rule: SmartRule, now = Date.now(
       }
     }
 
+    case 'bpm': {
+      const trackVal = track.bpm || 0;
+      const targetVal = Number(value) || 0;
+
+      switch (operator) {
+        case 'greater_than':
+          return trackVal > targetVal;
+        case 'less_than':
+          return trackVal > 0 && trackVal < targetVal;
+        case 'equals':
+        case 'is':
+          return trackVal === targetVal;
+        case 'is_not':
+          return trackVal !== targetVal;
+        default:
+          return trackVal >= targetVal;
+      }
+    }
+
+    case 'key': {
+      const trackKey = (track.key || '').toLowerCase();
+      const trackCamelot = (track.keyCamelot || '').toLowerCase();
+      const target = String(value).toLowerCase().trim();
+
+      switch (operator) {
+        case 'contains':
+          return trackKey.includes(target) || trackCamelot.includes(target);
+        case 'is':
+        case 'equals':
+          return trackKey === target || trackCamelot === target;
+        case 'is_not':
+          return trackKey !== target && trackCamelot !== target;
+        default:
+          return trackKey.includes(target) || trackCamelot.includes(target);
+      }
+    }
+
     case 'dateAdded':
     case 'lastPlayedAt': {
       const trackTimestamp = track[field] || 0;
@@ -181,6 +218,10 @@ export function sortSmartTracks(
         return mult * a.artist.localeCompare(b.artist, undefined, { sensitivity: 'base' });
       case 'album':
         return mult * a.album.localeCompare(b.album, undefined, { sensitivity: 'base' });
+      case 'bpm':
+        return mult * ((a.bpm || 0) - (b.bpm || 0));
+      case 'key':
+        return mult * (a.key || '').localeCompare(b.key || '');
       default:
         return 0;
     }
@@ -435,6 +476,12 @@ export function describeSmartPlaylistRules(config: SmartPlaylistConfig): string 
         break;
       case 'year':
         parts.push(`Year ${rule.operator.replace('_', ' ')} ${rule.value}`);
+        break;
+      case 'bpm':
+        parts.push(`BPM ${rule.operator.replace('_', ' ')} ${rule.value}`);
+        break;
+      case 'key':
+        parts.push(`Key ${rule.operator === 'is' ? 'is' : 'contains'} "${rule.value}"`);
         break;
       default:
         parts.push(`${rule.field} ${rule.operator}`);

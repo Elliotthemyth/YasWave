@@ -11,6 +11,9 @@ export interface TrackMetadata {
   duration: number; // in seconds
   coverArtUrl?: string; // object URL or data URL
   hasEmbeddedCover?: boolean;
+  bpm?: number; // Beats Per Minute
+  key?: string; // e.g. 'C Major', 'A Minor'
+  keyCamelot?: string; // e.g. '8B', '8A'
 }
 
 export interface Track extends TrackMetadata {
@@ -29,6 +32,9 @@ export interface Track extends TrackMetadata {
   lyricsOffset?: number; // synchronization offset in seconds
   persianTranslations?: Record<string, string>; // cached Persian line translations
   lyricsProvider?: string; // e.g. 'LRCLIB' or 'local'
+  bpm?: number;
+  key?: string;
+  keyCamelot?: string;
 }
 
 export interface TrackUpdateInput {
@@ -43,4 +49,7 @@ export interface TrackUpdateInput {
   coverArtUrl?: string;
   persianTranslations?: Record<string, string>;
   lyricsProvider?: string;
+  bpm?: number;
+  key?: string;
+  keyCamelot?: string;
 }

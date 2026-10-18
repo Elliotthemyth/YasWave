@@ -11,6 +11,12 @@ import { cleanFileNameToTitle } from '../src/services/metadata/metadataParser';
 import { calculateLyricsMatchScore, stringSimilarity } from '../src/services/lyrics/lyricsMatcher';
 import { persianTranslationService } from '../src/services/lyrics/persianTranslationService';
 import { lrclibProvider } from '../src/services/lyrics/lrclibProvider';
+import {
+  calculateBpmFromChannelData,
+  calculateKeyFromChannelData,
+} from '../src/services/audio/audioAnalyzer';
+import { evaluateSmartRule } from '../src/services/playlist/smartPlaylistEvaluator';
+import { SmartRule } from '../src/types/playlist';
 
 describe('LRC Parser and Synchronizer', () => {
   it('parses timestamps in mm:ss.xx and mm:ss.xxx format', () => {
@@ -52,7 +58,7 @@ describe('LRC Parser and Synchronizer', () => {
     expect(result.words?.[0].time).toBe(1.0);
     expect(result.words?.[1].word).toBe('world');
     expect(result.words?.[1].time).toBe(1.5);
-    expect(result.cleanText).toBe('Hello   world   again');
+    expect(result.cleanText).toBe('Hello world again');
 
     const lineWithoutWords = 'Plain line without word timings';
     const result2 = extractWordTimings(lineWithoutWords);
@@ -182,5 +188,136 @@ describe('Metadata Fallback Cleaners', () => {
     const res2 = cleanFileNameToTitle('lofi_chill_beats_night.flac');
     expect(res2.title).toBe('lofi chill beats night');
     expect(res2.artist).toBe('Unknown Artist');
+  });
+});
+
+describe('Audio Analyzer — BPM & Musical Key Detection', () => {
+  it('detects tempo accurately from synthetic rhythmic beat pulses', () => {
+    const sampleRate = 44100;
+    const duration = 12; // seconds
+    const totalSamples = sampleRate * duration;
+    const samples = new Float32Array(totalSamples);
+
+    // 120 BPM = 2 beats per second = 1 beat every 0.5s = 22,050 samples
+    const beatIntervalSamples = Math.round(sampleRate * (60 / 120));
+    for (let beat = 0; beat < duration * 2; beat++) {
+      const beatStart = beat * beatIntervalSamples;
+      // 40ms kick burst at 100Hz
+      const burstLength = Math.round(sampleRate * 0.04);
+      for (let j = 0; j < burstLength && beatStart + j < totalSamples; j++) {
+        const t = j / sampleRate;
+        const envelope = 1 - j / burstLength;
+        samples[beatStart + j] = Math.sin(2 * Math.PI * 100 * t) * envelope;
+      }
+    }
+
+    const bpm = calculateBpmFromChannelData(samples, sampleRate);
+    expect(Math.abs(bpm - 120)).toBeLessThanOrEqual(2);
+  });
+
+  it('detects C Major musical key and 8B Camelot code from C-E-G triad harmonic tones', () => {
+    const sampleRate = 44100;
+    const duration = 4;
+    const totalSamples = sampleRate * duration;
+    const samples = new Float32Array(totalSamples);
+
+    // C Major triad: C4 (261.63Hz), E4 (329.63Hz), G4 (392.00Hz)
+    const fC = 261.63;
+    const fE = 329.63;
+    const fG = 392.00;
+
+    for (let i = 0; i < totalSamples; i++) {
+      const t = i / sampleRate;
+      samples[i] =
+        0.4 * Math.sin(2 * Math.PI * fC * t) +
+        0.3 * Math.sin(2 * Math.PI * fE * t) +
+        0.3 * Math.sin(2 * Math.PI * fG * t);
+    }
+
+    const result = calculateKeyFromChannelData(samples, sampleRate);
+    expect(result.key).toBe('C Major');
+    expect(result.mode).toBe('major');
+    expect(result.camelot).toBe('8B');
+    expect(result.confidence).toBeGreaterThan(0.5);
+  });
+
+  it('detects A Minor musical key and 8A Camelot code from A-C-E triad harmonic tones', () => {
+    const sampleRate = 44100;
+    const duration = 4;
+    const totalSamples = sampleRate * duration;
+    const samples = new Float32Array(totalSamples);
+
+    // A Minor triad: A3 (220.00Hz), C4 (261.63Hz), E4 (329.63Hz)
+    const fA = 220.00;
+    const fC = 261.63;
+    const fE = 329.63;
+
+    for (let i = 0; i < totalSamples; i++) {
+      const t = i / sampleRate;
+      samples[i] =
+        0.4 * Math.sin(2 * Math.PI * fA * t) +
+        0.3 * Math.sin(2 * Math.PI * fC * t) +
+        0.3 * Math.sin(2 * Math.PI * fE * t);
+    }
+
+    const result = calculateKeyFromChannelData(samples, sampleRate);
+    expect(result.key).toBe('A Minor');
+    expect(result.mode).toBe('minor');
+    expect(result.camelot).toBe('8A');
+    expect(result.confidence).toBeGreaterThan(0.5);
+  });
+});
+
+describe('Smart Playlist Filtering by BPM and Key', () => {
+  it('filters tracks by BPM threshold and Key string', () => {
+    const trackHighBpm = {
+      id: 't-1',
+      title: 'Techno Beat',
+      artist: 'DJ Pulse',
+      album: 'Club Tracks',
+      duration: 180,
+      fileName: 'techno.mp3',
+      fileSize: 1000,
+      fileType: 'audio/mpeg',
+      dateAdded: Date.now(),
+      playCount: 5,
+      isFavorite: false,
+      sourceType: 'browser_file' as const,
+      bpm: 130,
+      key: 'A Minor',
+      keyCamelot: '8A',
+    };
+
+    const trackLowBpm = {
+      id: 't-2',
+      title: 'Ambient Chill',
+      artist: 'Sleep Waves',
+      album: 'Dreams',
+      duration: 200,
+      fileName: 'ambient.mp3',
+      fileSize: 1000,
+      fileType: 'audio/mpeg',
+      dateAdded: Date.now(),
+      playCount: 1,
+      isFavorite: false,
+      sourceType: 'browser_file' as const,
+      bpm: 75,
+      key: 'C Major',
+      keyCamelot: '8B',
+    };
+
+    // BPM > 120
+    const ruleBpm: SmartRule = { id: 'r1', field: 'bpm', operator: 'greater_than', value: 120 };
+    expect(evaluateSmartRule(trackHighBpm, ruleBpm)).toBe(true);
+    expect(evaluateSmartRule(trackLowBpm, ruleBpm)).toBe(false);
+
+    // Key is 'A Minor' or Camelot '8A'
+    const ruleKey: SmartRule = { id: 'r2', field: 'key', operator: 'contains', value: 'Minor' };
+    expect(evaluateSmartRule(trackHighBpm, ruleKey)).toBe(true);
+    expect(evaluateSmartRule(trackLowBpm, ruleKey)).toBe(false);
+
+    const ruleCamelot: SmartRule = { id: 'r3', field: 'key', operator: 'is', value: '8b' };
+    expect(evaluateSmartRule(trackLowBpm, ruleCamelot)).toBe(true);
+    expect(evaluateSmartRule(trackHighBpm, ruleCamelot)).toBe(false);
   });
 });

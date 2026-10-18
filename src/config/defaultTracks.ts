@@ -27,6 +27,9 @@ export const DEMO_TRACKS: DefaultDemoTrackConfig[] = [
       sourceType: 'synth_demo',
       lyricsOffset: 0,
       lyricsProvider: 'Embedded / Offline',
+      bpm: 88,
+      key: 'A Minor',
+      keyCamelot: '8A',
       persianTranslations: {
         '(soft rhodes ambient intro)': '(مقدمه آرام و ملایم پیانو رودز)',
         'deep in the quiet of the night': 'در ژرفای سکوت شب',
@@ -68,6 +71,9 @@ export const DEMO_TRACKS: DefaultDemoTrackConfig[] = [
       sourceType: 'synth_demo',
       lyricsOffset: 0,
       lyricsProvider: 'Embedded / Offline',
+      bpm: 82,
+      key: 'C Major',
+      keyCamelot: '8B',
       persianTranslations: {
         '(dusty electric piano arp)': '(آرپژ پیانوی الکتریک قدیمی)',
         'compiling thoughts into a stream': 'کامپایل کردن افکار در جریانی پیوسته',
@@ -111,6 +117,9 @@ export const DEMO_TRACKS: DefaultDemoTrackConfig[] = [
       sourceType: 'synth_demo',
       lyricsOffset: 0,
       lyricsProvider: 'Embedded / Offline',
+      bpm: 124,
+      key: 'F Minor',
+      keyCamelot: '4A',
       persianTranslations: {
         '(analog bassline sweeps in)': '(خط بیس آنالوگ فرا می‌رسد)',
         'driving fast through endless rain': 'راندن با سرعت در میان بارانی بی‌پایان',

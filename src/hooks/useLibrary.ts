@@ -5,6 +5,7 @@ import { defaultRepository } from '../services/storage/libraryRepository';
 import { DEMO_TRACKS } from '../config/defaultTracks';
 import { extractMetadata } from '../services/metadata/metadataParser';
 import { browserFileAdapter } from '../services/filesystem/browserFileAdapter';
+import { calculateBpmAndKeyFromFile } from '../services/audio/audioAnalyzer';
 
 export function useLibrary() {
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -67,6 +68,28 @@ export function useLibrary() {
         storedPlaylists = [defaultPlaylist, starterSmartPlaylist];
       }
 
+      // Ensure existing tracks have BPM/Key enriched if they were seeded earlier
+      let tracksUpdated = false;
+      storedTracks = storedTracks.map((t) => {
+        if (!t.bpm || !t.key) {
+          const demo = DEMO_TRACKS.find((d) => d.track.id === t.id);
+          if (demo) {
+            tracksUpdated = true;
+            return {
+              ...t,
+              bpm: demo.track.bpm,
+              key: demo.track.key,
+              keyCamelot: demo.track.keyCamelot,
+            };
+          }
+        }
+        return t;
+      });
+
+      if (tracksUpdated) {
+        await defaultRepository.saveTracks(storedTracks);
+      }
+
       setTracks(storedTracks);
       setPlaylists(storedPlaylists);
     } catch (err) {
@@ -116,6 +139,9 @@ export function useLibrary() {
           duration: metadata.duration,
           coverArtUrl: metadata.coverArtUrl,
           hasEmbeddedCover: metadata.hasEmbeddedCover,
+          bpm: metadata.bpm,
+          key: metadata.key,
+          keyCamelot: metadata.keyCamelot,
           fileName: file.name,
           fileSize: file.size,
           fileType: file.type || 'audio/mpeg',
@@ -173,6 +199,52 @@ export function useLibrary() {
       defaultRepository.saveTrack(updated).catch(console.error);
       return prev.map((t) => (t.id === trackId ? updated : t));
     });
+  }, []);
+
+  /**
+   * Analyze or re-calculate BPM and Musical Key for any track
+   */
+  const analyzeTrackAudio = useCallback(async (trackId: string): Promise<Track | null> => {
+    let currentTrack: Track | undefined;
+    setTracks((prev) => {
+      currentTrack = prev.find((t) => t.id === trackId);
+      return prev;
+    });
+
+    if (!currentTrack) return null;
+
+    const file = browserFileAdapter.getFile(trackId);
+    let bpm: number | undefined;
+    let key: string | undefined;
+    let keyCamelot: string | undefined;
+
+    if (file) {
+      const result = await calculateBpmAndKeyFromFile(file);
+      bpm = result.bpm;
+      key = result.key;
+      keyCamelot = result.keyCamelot;
+    } else {
+      const demo = DEMO_TRACKS.find((d) => d.track.id === trackId);
+      if (demo) {
+        bpm = demo.track.bpm;
+        key = demo.track.key;
+        keyCamelot = demo.track.keyCamelot;
+      }
+    }
+
+    if (bpm !== undefined || key !== undefined) {
+      const updated: Track = {
+        ...currentTrack,
+        ...(bpm !== undefined ? { bpm } : {}),
+        ...(key !== undefined ? { key } : {}),
+        ...(keyCamelot !== undefined ? { keyCamelot } : {}),
+      };
+      await defaultRepository.saveTrack(updated);
+      setTracks((prev) => prev.map((t) => (t.id === trackId ? updated : t)));
+      return updated;
+    }
+
+    return currentTrack;
   }, []);
 
   /**
@@ -339,6 +411,7 @@ export function useLibrary() {
     deletePlaylist,
     addTrackToPlaylist,
     removeTrackFromPlaylist,
+    analyzeTrackAudio,
     reloadData,
   };
 }

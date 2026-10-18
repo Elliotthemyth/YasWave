@@ -25,6 +25,13 @@ export class BrowserFileAdapter implements FileAdapter {
   }
 
   /**
+   * Retrieve cached File object for a track ID
+   */
+  getFile(trackId: string): File | undefined {
+    return this.fileCache.get(trackId);
+  }
+
+  /**
    * Open native browser file picker dialog
    */
   async selectFiles(options: { multiple?: boolean; accept?: string } = {}): Promise<File[]> {

@@ -13,8 +13,11 @@ interface TrackRowProps {
   onTogglePlay: () => void;
   onToggleFavorite: (trackId: string) => void;
   onOpenContextMenu: (e: React.MouseEvent, track: Track) => void;
+  onAnalyzeTrack?: (trackId: string) => void;
   showAlbum?: boolean;
   showDateAdded?: boolean;
+  showBpm?: boolean;
+  showKey?: boolean;
 }
 
 export const TrackRow: React.FC<TrackRowProps> = ({
@@ -28,6 +31,8 @@ export const TrackRow: React.FC<TrackRowProps> = ({
   onOpenContextMenu,
   showAlbum = true,
   showDateAdded = true,
+  showBpm = true,
+  showKey = true,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -44,6 +49,10 @@ export const TrackRow: React.FC<TrackRowProps> = ({
     }
   };
 
+  const gridColumns = `40px minmax(180px, 3fr) ${showAlbum ? 'minmax(130px, 2fr)' : ''} ${
+    showBpm ? '70px' : ''
+  } ${showKey ? '95px' : ''} ${showDateAdded ? '110px' : ''} 85px 40px`;
+
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
@@ -57,11 +66,7 @@ export const TrackRow: React.FC<TrackRowProps> = ({
       className={`group relative grid items-center px-4 py-2 rounded-md transition-colors cursor-pointer select-none text-sm ${
         isCurrent ? 'bg-white/10 text-white' : 'hover:bg-white/5 text-neutral-300'
       }`}
-      style={{
-        gridTemplateColumns: `40px minmax(200px, 3fr) ${showAlbum ? 'minmax(140px, 2fr)' : ''} ${
-          showDateAdded ? '120px' : ''
-        } 90px 40px`,
-      }}
+      style={{ gridTemplateColumns: gridColumns }}
     >
       {/* Index or Play / Equalizer icon */}
       <div className="flex items-center justify-start text-xs text-neutral-400 font-mono">
@@ -113,6 +118,40 @@ export const TrackRow: React.FC<TrackRowProps> = ({
           <p className="text-xs text-neutral-400 truncate group-hover:text-neutral-300">
             {track.album || 'Unknown Album'}
           </p>
+        </div>
+      )}
+
+      {/* BPM (Beats Per Minute) */}
+      {showBpm && (
+        <div className="text-xs font-mono tabular-nums text-neutral-400 truncate">
+          {track.bpm ? (
+            <span className="text-neutral-300 group-hover:text-white transition-colors" title={`${track.bpm} BPM`}>
+              {track.bpm}
+            </span>
+          ) : (
+            <span className="text-neutral-600">—</span>
+          )}
+        </div>
+      )}
+
+      {/* Musical Key & Camelot Notation */}
+      {showKey && (
+        <div className="text-xs truncate flex items-center gap-1.5">
+          {track.key ? (
+            <span
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-medium bg-white/5 border border-white/10 text-emerald-400 group-hover:border-emerald-500/30 transition-colors"
+              title={`${track.key}${track.keyCamelot ? ` (${track.keyCamelot})` : ''}`}
+            >
+              <span>{track.key.replace(' Major', '').replace(' Minor', 'm')}</span>
+              {track.keyCamelot && (
+                <span className="text-[9px] font-mono text-neutral-400 bg-neutral-900/80 px-1 py-0.2 rounded">
+                  {track.keyCamelot}
+                </span>
+              )}
+            </span>
+          ) : (
+            <span className="text-neutral-600">—</span>
+          )}
         </div>
       )}
 

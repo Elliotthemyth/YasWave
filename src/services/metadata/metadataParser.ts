@@ -1,5 +1,6 @@
 import * as mm from 'music-metadata-browser';
 import { TrackMetadata } from '../../types/track';
+import { calculateBpmAndKeyFromFile } from '../audio/audioAnalyzer';
 
 /**
  * Clean up audio filename into a readable title fallback
@@ -65,7 +66,7 @@ export function probeAudioDuration(file: File): Promise<number> {
 
 /**
  * Extract comprehensive metadata from an audio File using music-metadata-browser
- * with zero-fail fallback handling.
+ * with audio analysis for BPM and Musical Key detection.
  */
 export async function extractMetadata(file: File): Promise<TrackMetadata> {
   const fallbackInfo = cleanFileNameToTitle(file.name);
@@ -79,6 +80,8 @@ export async function extractMetadata(file: File): Promise<TrackMetadata> {
   let genre: string | undefined;
   let coverArtUrl: string | undefined;
   let hasEmbeddedCover = false;
+  let tagBpm: number | undefined;
+  let tagKey: string | undefined;
 
   try {
     const parsed = await mm.parseBlob(file, { duration: true, skipCovers: false });
@@ -105,6 +108,12 @@ export async function extractMetadata(file: File): Promise<TrackMetadata> {
     if (common.genre && common.genre.length > 0) {
       genre = common.genre[0];
     }
+    if (common.bpm) {
+      tagBpm = Math.round(common.bpm);
+    }
+    if (common.key) {
+      tagKey = common.key.trim();
+    }
     if (parsed.format.duration && !isNaN(parsed.format.duration)) {
       duration = Math.round(parsed.format.duration);
     }
@@ -126,6 +135,9 @@ export async function extractMetadata(file: File): Promise<TrackMetadata> {
     duration = await probeAudioDuration(file);
   }
 
+  // Calculate BPM and Musical Key via Web Audio DSP analysis
+  const audioAnalysis = await calculateBpmAndKeyFromFile(file, tagBpm, tagKey);
+
   return {
     title,
     artist,
@@ -137,5 +149,8 @@ export async function extractMetadata(file: File): Promise<TrackMetadata> {
     duration: Math.round(duration),
     coverArtUrl,
     hasEmbeddedCover,
+    bpm: audioAnalysis.bpm,
+    key: audioAnalysis.key,
+    keyCamelot: audioAnalysis.keyCamelot,
   };
 }

@@ -119,7 +119,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             </div>
             <div>
               <h3 className="font-semibold text-neutral-100 text-sm">Import Local Music</h3>
-              <p className="text-xs text-neutral-400">Add songs from your Linux filesystem</p>
+              <p className="text-xs text-neutral-400">Add songs with automated BPM & Key detection</p>
             </div>
           </div>
           <button
@@ -183,7 +183,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-brand-400 font-medium">
                   <Loader2 size={13} className="animate-spin" />
-                  Reading ID3 metadata...
+                  Analyzing audio, BPM, Key & metadata...
                 </span>
                 <span className="font-mono tabular-nums text-neutral-400">
                   {importProgress.current} / {importProgress.total}
