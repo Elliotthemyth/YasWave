@@ -43,9 +43,9 @@ export const TopNav: React.FC<TopNavProps> = ({
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <header className="h-14 w-full bg-neutral-900/60 border-b border-white/5 flex items-center justify-between px-6 shrink-0 backdrop-blur-md z-30 select-none">
+    <header className="h-14 w-full bg-neutral-900/60 border-b border-white/5 flex items-center justify-between px-3 sm:px-6 shrink-0 backdrop-blur-md z-30 select-none">
       {/* Navigation history arrows */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
         <button
           onClick={onNavigateBack}
           disabled={!canNavigateBack}
@@ -64,8 +64,8 @@ export const TopNav: React.FC<TopNavProps> = ({
         </button>
 
         {/* Global Search Bar */}
-        <div className="relative ml-2 w-64 md:w-80">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+        <div className="relative ml-1 sm:ml-2 w-32 sm:w-56 md:w-80">
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-400" />
           <input
             ref={searchInputRef}
             type="text"
@@ -76,7 +76,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 onSelectView('search');
               }
             }}
-            placeholder="Search tracks, artists, albums (Ctrl+F)"
+            placeholder="Search... (Ctrl+F)"
             className="w-full bg-neutral-800/80 text-xs text-neutral-100 placeholder-neutral-500 rounded-full pl-9 pr-8 py-2 border border-transparent focus:border-white/20 focus:outline-none focus:bg-neutral-800 transition-all"
           />
           {searchQuery && (

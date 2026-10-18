@@ -9,11 +9,16 @@ const DB_VERSION = APP_CONFIG.dbVersion;
 const STORE_TRACKS = 'tracks';
 const STORE_PLAYLISTS = 'playlists';
 const STORE_PREFERENCES = 'preferences';
+const STORE_AUDIO_FILES = 'audio_files';
+const STORE_TRANSLATIONS = 'translations';
 
 let dbInstance: IDBDatabase | null = null;
 
 export async function getDb(): Promise<IDBDatabase> {
   if (dbInstance) return dbInstance;
+  if (typeof indexedDB === 'undefined') {
+    throw new Error('IndexedDB is not supported in this runtime environment.');
+  }
 
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -35,6 +40,14 @@ export async function getDb(): Promise<IDBDatabase> {
 
       if (!db.objectStoreNames.contains(STORE_PREFERENCES)) {
         db.createObjectStore(STORE_PREFERENCES, { keyPath: 'key' });
+      }
+
+      if (!db.objectStoreNames.contains(STORE_AUDIO_FILES)) {
+        db.createObjectStore(STORE_AUDIO_FILES, { keyPath: 'id' });
+      }
+
+      if (!db.objectStoreNames.contains(STORE_TRANSLATIONS)) {
+        db.createObjectStore(STORE_TRANSLATIONS, { keyPath: 'key' });
       }
     };
 
@@ -175,13 +188,96 @@ export async function idbSavePreferences(prefs: UserPreferences): Promise<void> 
   });
 }
 
+export async function idbSaveAudioFile(trackId: string, fileOrBlob: Blob): Promise<void> {
+  const db = await getDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_AUDIO_FILES, 'readwrite');
+    const store = tx.objectStore(STORE_AUDIO_FILES);
+    const request = store.put({ id: trackId, blob: fileOrBlob, updatedAt: Date.now() });
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function idbGetAudioFile(trackId: string): Promise<Blob | undefined> {
+  const db = await getDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_AUDIO_FILES, 'readonly');
+    const store = tx.objectStore(STORE_AUDIO_FILES);
+    const request = store.get(trackId);
+    request.onsuccess = () => {
+      resolve(request.result?.blob);
+    };
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function idbHasAudioFile(trackId: string): Promise<boolean> {
+  const db = await getDb();
+  return new Promise((resolve) => {
+    const tx = db.transaction(STORE_AUDIO_FILES, 'readonly');
+    const store = tx.objectStore(STORE_AUDIO_FILES);
+    const request = store.getKey(trackId);
+    request.onsuccess = () => {
+      resolve(Boolean(request.result));
+    };
+    request.onerror = () => resolve(false);
+  });
+}
+
+export async function idbDeleteAudioFile(trackId: string): Promise<void> {
+  const db = await getDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_AUDIO_FILES, 'readwrite');
+    const store = tx.objectStore(STORE_AUDIO_FILES);
+    const request = store.delete(trackId);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function idbSaveTranslation(key: string, translation: string): Promise<void> {
+  const db = await getDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_TRANSLATIONS, 'readwrite');
+    const store = tx.objectStore(STORE_TRANSLATIONS);
+    const request = store.put({ key, translation, updatedAt: Date.now() });
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function idbGetAllTranslations(): Promise<Record<string, string>> {
+  const db = await getDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_TRANSLATIONS, 'readonly');
+    const store = tx.objectStore(STORE_TRANSLATIONS);
+    const request = store.getAll();
+    request.onsuccess = () => {
+      const result: Record<string, string> = {};
+      for (const item of request.result || []) {
+        if (item.key && item.translation) {
+          result[item.key] = item.translation;
+        }
+      }
+      resolve(result);
+    };
+    request.onerror = () => reject(request.error);
+  });
+}
+
 export async function idbClearAll(): Promise<void> {
   const db = await getDb();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction([STORE_TRACKS, STORE_PLAYLISTS, STORE_PREFERENCES], 'readwrite');
+    const tx = db.transaction(
+      [STORE_TRACKS, STORE_PLAYLISTS, STORE_PREFERENCES, STORE_AUDIO_FILES, STORE_TRANSLATIONS],
+      'readwrite'
+    );
     tx.objectStore(STORE_TRACKS).clear();
     tx.objectStore(STORE_PLAYLISTS).clear();
     tx.objectStore(STORE_PREFERENCES).clear();
+    tx.objectStore(STORE_AUDIO_FILES).clear();
+    tx.objectStore(STORE_TRANSLATIONS).clear();
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });

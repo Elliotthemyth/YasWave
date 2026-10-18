@@ -2,6 +2,7 @@ import { FileAdapter } from '../../types/adapters';
 import { Track } from '../../types/track';
 import { APP_CONFIG } from '../../config/appConfig';
 import { generateSynthesizedTrack, SynthSongType } from '../audio/synthAudioGenerator';
+import { idbSaveAudioFile, idbGetAudioFile } from '../storage/indexedDb';
 
 export class BrowserFileAdapter implements FileAdapter {
   readonly mode = 'browser' as const;
@@ -18,10 +19,28 @@ export class BrowserFileAdapter implements FileAdapter {
   }
 
   /**
-   * Register a local File object with a track ID
+   * Helper to determine if a File is a supported audio format
    */
-  registerFile(trackId: string, file: File): void {
+  isAudioFile(file: File): boolean {
+    const ext = '.' + file.name.split('.').pop()?.toLowerCase();
+    const type = file.type?.toLowerCase() || '';
+    return (
+      APP_CONFIG.supportedExtensions.includes(ext) ||
+      type.startsWith('audio/') ||
+      APP_CONFIG.supportedMimeTypes.includes(type)
+    );
+  }
+
+  /**
+   * Register a local File object with a track ID and persist to IndexedDB
+   */
+  async registerFile(trackId: string, file: File): Promise<void> {
     this.fileCache.set(trackId, file);
+    try {
+      await idbSaveAudioFile(trackId, file);
+    } catch (err) {
+      console.warn(`Failed to persist audio file in IndexedDB for track ${trackId}:`, err);
+    }
   }
 
   /**
@@ -46,7 +65,7 @@ export class BrowserFileAdapter implements FileAdapter {
           resolve([]);
           return;
         }
-        const files = Array.from(input.files);
+        const files = Array.from(input.files).filter((f) => this.isAudioFile(f));
         resolve(files);
       };
 
@@ -59,16 +78,59 @@ export class BrowserFileAdapter implements FileAdapter {
   }
 
   /**
-   * Open browser directory picker to import entire music folders
+   * Recursively read files from a FileSystemDirectoryHandle (File System Access API)
+   */
+  private async walkDirectory(dirHandle: FileSystemDirectoryHandle): Promise<File[]> {
+    const results: File[] = [];
+    const entries = (dirHandle as unknown as { values: () => AsyncIterable<FileSystemHandle> }).values();
+    for await (const entry of entries) {
+      if (entry.kind === 'file') {
+        const fileEntry = entry as FileSystemFileHandle;
+        try {
+          const file = await fileEntry.getFile();
+          if (this.isAudioFile(file)) {
+            results.push(file);
+          }
+        } catch (err) {
+          console.warn('Could not read file from directory handle:', err);
+        }
+      } else if (entry.kind === 'directory') {
+        const subFiles = await this.walkDirectory(entry as FileSystemDirectoryHandle);
+        results.push(...subFiles);
+      }
+    }
+    return results;
+  }
+
+  /**
+   * Open directory picker to import music folders recursively
    */
   async selectFolder(): Promise<File[]> {
+    // 1. Try modern File System Access API if available
+    if (typeof window !== 'undefined' && 'showDirectoryPicker' in window) {
+      try {
+        const dirPicker = (window as unknown as { showDirectoryPicker: () => Promise<FileSystemDirectoryHandle> }).showDirectoryPicker;
+        const dirHandle = await dirPicker();
+        const files = await this.walkDirectory(dirHandle);
+        if (files.length > 0) {
+          return files;
+        }
+      } catch (err) {
+        if ((err as Error)?.name === 'AbortError') {
+          return [];
+        }
+        console.warn('showDirectoryPicker failed, falling back to input:', err);
+      }
+    }
+
+    // 2. Standard webkitdirectory input fallback
     return new Promise((resolve) => {
       const input = document.createElement('input');
       input.type = 'file';
-      // Set webkitdirectory for directory upload
       input.setAttribute('webkitdirectory', '');
       input.setAttribute('directory', '');
       input.multiple = true;
+      input.accept = APP_CONFIG.supportedExtensions.join(',') + ',' + APP_CONFIG.supportedMimeTypes.join(',');
 
       input.onchange = () => {
         if (!input.files || input.files.length === 0) {
@@ -76,14 +138,7 @@ export class BrowserFileAdapter implements FileAdapter {
           return;
         }
 
-        const validFiles = Array.from(input.files).filter((file) => {
-          const ext = '.' + file.name.split('.').pop()?.toLowerCase();
-          return (
-            APP_CONFIG.supportedExtensions.includes(ext) ||
-            APP_CONFIG.supportedMimeTypes.some((type) => file.type.startsWith('audio/'))
-          );
-        });
-
+        const validFiles = Array.from(input.files).filter((file) => this.isAudioFile(file));
         resolve(validFiles);
       };
 
@@ -96,7 +151,7 @@ export class BrowserFileAdapter implements FileAdapter {
   }
 
   /**
-   * Retrieve a playable object URL for the track
+   * Retrieve a playable object URL for the track, restoring from IndexedDB if necessary
    */
   async getPlayableUrl(track: Track): Promise<string> {
     // 1. Handle synthesized ambient demo songs
@@ -116,7 +171,7 @@ export class BrowserFileAdapter implements FileAdapter {
       return url;
     }
 
-    // 2. Handle browser-imported files from the current session
+    // 2. Check in-memory session cache first
     const file = this.fileCache.get(track.id);
     if (file) {
       const url = URL.createObjectURL(file);
@@ -124,10 +179,36 @@ export class BrowserFileAdapter implements FileAdapter {
       return url;
     }
 
-    // 3. Fallback: If browser session was refreshed and file handle was lost
+    // 3. Persistent restoration: Check IndexedDB audio_files store
+    try {
+      const storedBlob = await idbGetAudioFile(track.id);
+      if (storedBlob) {
+        const restoredFile = new File([storedBlob], track.fileName, {
+          type: track.fileType || 'audio/mpeg',
+        });
+        this.fileCache.set(track.id, restoredFile);
+        const url = URL.createObjectURL(storedBlob);
+        this.activeUrls.add(url);
+        return url;
+      }
+    } catch (dbErr) {
+      console.warn(`IndexedDB retrieval failed for track ${track.id}:`, dbErr);
+    }
+
+    // 4. Fallback: Prompt user with informative recovery instruction
     throw new Error(
-      `Audio file "${track.fileName}" is not loaded in this browser session. Please re-import this track or folder from your computer.`
+      `Audio file "${track.fileName}" is not loaded in this session. Tap "Relink" to reselect this track from your storage.`
     );
+  }
+
+  /**
+   * Relink a missing track with a newly selected File object
+   */
+  async relinkFile(trackId: string, file: File): Promise<string> {
+    await this.registerFile(trackId, file);
+    const url = URL.createObjectURL(file);
+    this.activeUrls.add(url);
+    return url;
   }
 
   /**
@@ -141,7 +222,7 @@ export class BrowserFileAdapter implements FileAdapter {
   }
 
   /**
-   * Check if a file is loaded in the browser session
+   * Check if a file is loaded in the browser session or IndexedDB
    */
   hasSessionFile(trackId: string): boolean {
     return this.fileCache.has(trackId);

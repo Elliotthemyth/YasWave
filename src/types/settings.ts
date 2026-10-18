@@ -15,6 +15,7 @@ export interface UserPreferences {
   lyricsSyncOffset: number; // default global offset in seconds
   showDesktopNotifications: boolean;
   hardwareAcceleration: boolean;
+  customTranslateEndpoint?: string;
 }
 
 export const DEFAULT_PREFERENCES: UserPreferences = {

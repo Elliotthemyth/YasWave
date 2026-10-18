@@ -4,7 +4,7 @@ export const APP_CONFIG = {
   version: '1.0.0',
   storageKeyPrefix: 'nocturne_',
   dbName: 'nocturne_music_db',
-  dbVersion: 1,
+  dbVersion: 2,
   supportedExtensions: ['.mp3', '.flac', '.wav', '.ogg', '.m4a', '.aac', '.opus', '.weba'],
   supportedMimeTypes: [
     'audio/mpeg',

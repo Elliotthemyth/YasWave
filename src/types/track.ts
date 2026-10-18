@@ -52,4 +52,7 @@ export interface TrackUpdateInput {
   bpm?: number;
   key?: string;
   keyCamelot?: string;
+  fileName?: string;
+  fileSize?: number;
+  fileType?: string;
 }

@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   return (
     <aside
-      className={`h-full bg-neutral-950 flex flex-col border-r border-white/5 transition-all duration-200 select-none ${
+      className={`hidden md:flex h-full bg-neutral-950 flex-col border-r border-white/5 transition-all duration-200 select-none ${
         isCollapsed ? 'w-16' : 'w-64'
       }`}
     >

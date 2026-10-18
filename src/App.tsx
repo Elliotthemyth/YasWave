@@ -17,6 +17,10 @@ import { QueueDrawer } from './components/player/QueueDrawer';
 import { VisualizerOverlay } from './components/visualizer/VisualizerOverlay';
 import { LyricsModal } from './components/lyrics/LyricsModal';
 import { LyricsEditorModal } from './components/lyrics/LyricsEditorModal';
+import { LyricsDiscoveryModal } from './components/lyrics/LyricsDiscoveryModal';
+import { LyricsSyncStudioModal } from './components/lyrics/LyricsSyncStudioModal';
+import { MobileBottomNav } from './components/layout/MobileBottomNav';
+import { MobileFullPlayerModal } from './components/player/MobileFullPlayerModal';
 import { EditTrackModal } from './components/modals/EditTrackModal';
 import { CreatePlaylistModal } from './components/modals/CreatePlaylistModal';
 import { SmartPlaylistModal } from './components/modals/SmartPlaylistModal';
@@ -63,6 +67,12 @@ export default function App() {
   const [isLyricsSearchModalOpen, setIsLyricsSearchModalOpen] = useState(false);
   const [editingTrack, setEditingTrack] = useState<Track | null>(null);
   const [editingLyricsTrack, setEditingLyricsTrack] = useState<Track | null>(null);
+
+  // Mobile & Studio Overlays
+  const [isMobilePlayerExpanded, setIsMobilePlayerExpanded] = useState(false);
+  const [isLyricsDiscoveryOpen, setIsLyricsDiscoveryOpen] = useState(false);
+  const [isSyncStudioOpen, setIsSyncStudioOpen] = useState(false);
+  const [syncStudioInitialLyrics, setSyncStudioInitialLyrics] = useState<string | undefined>();
 
   // Context Menu state
   const [contextMenu, setContextMenu] = useState<{
@@ -252,6 +262,30 @@ export default function App() {
     onOpenShortcuts: () => setIsShortcutsModalOpen(true),
   });
 
+  // Studio & Discovery handlers
+  const handleOpenSyncStudio = useCallback((track: Track, initialText?: string) => {
+    setSyncStudioInitialLyrics(initialText ?? track.lyrics);
+    setIsSyncStudioOpen(true);
+  }, []);
+
+  const handleSaveStudioLyrics = useCallback(
+    (trackId: string, lrcContent: string) => {
+      updateTrack(trackId, { lyrics: lrcContent, lyricsOffset: 0 });
+    },
+    [updateTrack]
+  );
+
+  const handleSaveDiscoveryLyrics = useCallback(
+    (trackId: string, lrcText: string, persianTranslations?: Record<string, string>) => {
+      updateTrack(trackId, {
+        lyrics: lrcText,
+        lyricsOffset: 0,
+        ...(persianTranslations ? { persianTranslations } : {}),
+      });
+    },
+    [updateTrack]
+  );
+
   // Current active playlist object
   const currentPlaylist = playlists.find((pl) => pl.id === selectedPlaylistId);
 
@@ -302,8 +336,8 @@ export default function App() {
             onSelectView={handleSelectView}
           />
 
-          {/* Scrollable View Container */}
-          <main className="flex-1 overflow-y-auto relative">
+          {/* Scrollable View Container (with bottom padding for mobile mini-player & bottom nav) */}
+          <main className="flex-1 overflow-y-auto relative pb-32 md:pb-6">
             {activeView === 'home' && (
               <HomeView
                 tracks={tracks}
@@ -435,9 +469,63 @@ export default function App() {
         onToggleQueue={() => setIsQueueOpen((prev) => !prev)}
         onToggleLyrics={() => setIsLyricsOpen((prev) => !prev)}
         onToggleVisualizer={() => setIsVisualizerOpen((prev) => !prev)}
+        onExpandMobilePlayer={() => setIsMobilePlayerExpanded(true)}
         isQueueOpen={isQueueOpen}
         isLyricsOpen={isLyricsOpen}
         isVisualizerOpen={isVisualizerOpen}
+        accentColor={activeAccent.primary}
+      />
+
+      {/* 3.1 Mobile Bottom Navigation Bar */}
+      <MobileBottomNav
+        activeView={activeView}
+        onSelectView={handleSelectView}
+        onOpenLyrics={() => setIsLyricsOpen(true)}
+        accentColor={activeAccent.primary}
+      />
+
+      {/* 3.2 Mobile Full Screen Expanded Player */}
+      <MobileFullPlayerModal
+        isOpen={isMobilePlayerExpanded}
+        onClose={() => setIsMobilePlayerExpanded(false)}
+        currentTrack={currentTrack}
+        isPlaying={isPlaying}
+        isLoading={isLoading}
+        currentTime={currentTime}
+        duration={duration}
+        volume={volume}
+        isMuted={isMuted}
+        repeatMode={repeatMode}
+        isShuffle={isShuffle}
+        onTogglePlay={togglePlay}
+        onPlayNext={playNext}
+        onPlayPrevious={playPrevious}
+        onSeek={seek}
+        onVolumeChange={setVolume}
+        onToggleMute={toggleMute}
+        onToggleShuffle={toggleShuffle}
+        onCycleRepeatMode={cycleRepeatMode}
+        onToggleFavorite={toggleFavorite}
+        onOpenLyrics={() => {
+          setIsMobilePlayerExpanded(false);
+          setIsLyricsOpen(true);
+        }}
+        onOpenQueue={() => {
+          setIsMobilePlayerExpanded(false);
+          setIsQueueOpen(true);
+        }}
+        onOpenVisualizer={() => {
+          setIsMobilePlayerExpanded(false);
+          setIsVisualizerOpen(true);
+        }}
+        onOpenSyncStudio={
+          currentTrack
+            ? () => {
+                setIsMobilePlayerExpanded(false);
+                handleOpenSyncStudio(currentTrack);
+              }
+            : undefined
+        }
         accentColor={activeAccent.primary}
       />
 
@@ -486,6 +574,8 @@ export default function App() {
         }}
         onOpenLyricsEditor={(track) => setEditingLyricsTrack(track)}
         onOpenLyricsSearch={() => setIsLyricsSearchModalOpen(true)}
+        onOpenLyricsDiscovery={() => setIsLyricsDiscoveryOpen(true)}
+        onOpenSyncStudio={handleOpenSyncStudio}
         accentColor={activeAccent.primary}
       />
 
@@ -588,6 +678,34 @@ export default function App() {
         tracks={tracks}
         editingPlaylist={editingSmartPlaylist}
         onSave={handleSaveSmartPlaylist}
+      />
+
+      {/* 15. In-App Lyrics Discovery & Browser Modal */}
+      <LyricsDiscoveryModal
+        isOpen={isLyricsDiscoveryOpen}
+        onClose={() => setIsLyricsDiscoveryOpen(false)}
+        currentTrack={currentTrack}
+        onSaveLyrics={handleSaveDiscoveryLyrics}
+        onOpenSyncStudio={handleOpenSyncStudio}
+        accentColor={activeAccent.primary}
+      />
+
+      {/* 16. Graphical Lyrics Synchronization Studio Modal */}
+      <LyricsSyncStudioModal
+        isOpen={isSyncStudioOpen}
+        onClose={() => {
+          setIsSyncStudioOpen(false);
+          setSyncStudioInitialLyrics(undefined);
+        }}
+        currentTrack={currentTrack}
+        currentTime={currentTime}
+        duration={duration}
+        isPlaying={isPlaying}
+        onTogglePlay={togglePlay}
+        onSeek={seek}
+        onSaveLyrics={handleSaveStudioLyrics}
+        initialLyricsText={syncStudioInitialLyrics}
+        accentColor={activeAccent.primary}
       />
     </div>
   );

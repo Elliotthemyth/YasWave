@@ -46,6 +46,8 @@ interface LyricsModalProps {
   ) => void;
   onOpenLyricsEditor: (track: Track) => void;
   onOpenLyricsSearch: () => void;
+  onOpenSyncStudio?: (track: Track) => void;
+  onOpenLyricsDiscovery?: () => void;
   accentColor?: string;
 }
 
@@ -63,6 +65,8 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
   onUpdateTrackLyrics,
   onOpenLyricsEditor,
   onOpenLyricsSearch,
+  onOpenSyncStudio,
+  onOpenLyricsDiscovery,
   accentColor = '#10b981',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -396,15 +400,29 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
             </div>
           )}
 
-          {/* Find Online Lyrics Button */}
-          <button
-            onClick={onOpenLyricsSearch}
-            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors border border-white/10"
-            title="Search for lyrics on LRCLIB"
-          >
-            <Search size={13} className="text-brand-400" />
-            <span className="hidden sm:inline">Find on LRCLIB</span>
-          </button>
+          {/* Find Online Lyrics & Browser Button */}
+          {onOpenLyricsDiscovery && (
+            <button
+              onClick={onOpenLyricsDiscovery}
+              className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-colors border border-white/10"
+              title="Browse & Import Web Lyrics"
+            >
+              <Search size={13} className="text-brand-400" />
+              <span className="hidden sm:inline">Web Lyrics</span>
+            </button>
+          )}
+
+          {/* Sync Studio Button */}
+          {onOpenSyncStudio && currentTrack && (
+            <button
+              onClick={() => onOpenSyncStudio(currentTrack)}
+              className="px-3 py-1.5 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-xs font-semibold flex items-center gap-1.5 transition-colors border border-purple-500/30"
+              title="Open Graphical Lyrics Synchronization Studio"
+            >
+              <Sparkles size={13} className="text-purple-400" />
+              <span className="hidden sm:inline">Sync Studio</span>
+            </button>
+          )}
 
           {/* Translate Button / Refresh Translations */}
           <button
@@ -414,7 +432,7 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
             title="Translate / Refresh Persian Translation"
           >
             <Languages size={13} className={isTranslating ? 'animate-spin' : ''} />
-            <span className="hidden sm:inline">{isTranslating ? 'Translating...' : 'Translate to Persian'}</span>
+            <span className="hidden sm:inline">{isTranslating ? 'Translating...' : 'Translate'}</span>
           </button>
 
           {/* Hidden File Input for .LRC import */}

@@ -212,16 +212,35 @@ export function getActiveLyricIndex(
 }
 
 /**
- * Serialize lines back to standard LRC text
+ * Safely split line into word tokens preserving words, punctuation and RTL characters
  */
-export function formatLrcDocument(lines: LyricLine[], metadata?: { title?: string; artist?: string }): string {
+export function splitLineIntoTokens(text: string): string[] {
+  if (!text) return [];
+  // Split on whitespace while keeping tokens clean
+  return text.trim().split(/\s+/).filter(Boolean);
+}
+
+/**
+ * Serialize lines back to standard or enhanced LRC text
+ */
+export function formatLrcDocument(
+  lines: LyricLine[],
+  metadata?: { title?: string; artist?: string },
+  options: { includeWordTags?: boolean } = {}
+): string {
   const output: string[] = [];
   if (metadata?.title) output.push(`[ti:${metadata.title}]`);
   if (metadata?.artist) output.push(`[ar:${metadata.artist}]`);
 
   for (const line of lines) {
     if (line.time >= 0) {
-      output.push(`${formatLrcTimestamp(line.time)} ${line.text}`);
+      if (options.includeWordTags && line.words && line.words.length > 0) {
+        // Enhanced LRC with word-level tags
+        const wordParts = line.words.map((w) => `<${formatLrcTimestamp(w.time).slice(1, -1)}> ${w.word}`);
+        output.push(`${formatLrcTimestamp(line.time)} ${wordParts.join(' ')}`);
+      } else {
+        output.push(`${formatLrcTimestamp(line.time)} ${line.text}`);
+      }
     } else {
       output.push(line.text);
     }

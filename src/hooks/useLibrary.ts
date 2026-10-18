@@ -6,6 +6,7 @@ import { DEMO_TRACKS } from '../config/defaultTracks';
 import { extractMetadata } from '../services/metadata/metadataParser';
 import { browserFileAdapter } from '../services/filesystem/browserFileAdapter';
 import { calculateBpmAndKeyFromFile } from '../services/audio/audioAnalyzer';
+import { idbDeleteAudioFile } from '../services/storage/indexedDb';
 
 export function useLibrary() {
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -104,7 +105,7 @@ export function useLibrary() {
   }, [reloadData]);
 
   /**
-   * Import multiple audio files into the library
+   * Import multiple audio files into the library with deduplication and persistence
    */
   const importFiles = useCallback(async (files: File[]) => {
     if (!files || files.length === 0) return [];
@@ -121,11 +122,22 @@ export function useLibrary() {
       });
 
       try {
+        // Deduplication check: check if file with same name and size already exists in library
+        const existingTrack = tracks.find(
+          (t) => t.fileName === file.name && t.fileSize === file.size
+        );
+
+        if (existingTrack) {
+          // Re-register file into storage and session cache
+          await browserFileAdapter.registerFile(existingTrack.id, file);
+          continue;
+        }
+
         const metadata = await extractMetadata(file);
         const trackId = `track-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-        // Register in browser session file adapter
-        browserFileAdapter.registerFile(trackId, file);
+        // Register in browser session and persist binary into IndexedDB
+        await browserFileAdapter.registerFile(trackId, file);
 
         const newTrack: Track = {
           id: trackId,
@@ -166,6 +178,25 @@ export function useLibrary() {
     setIsImporting(false);
     setImportProgress(null);
     return newTracks;
+  }, [tracks]);
+
+  /**
+   * Relink an existing track with a chosen File
+   */
+  const relinkTrack = useCallback(async (trackId: string, file: File) => {
+    try {
+      await browserFileAdapter.relinkFile(trackId, file);
+      // Update track file details if changed
+      await updateTrack(trackId, {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type || 'audio/mpeg',
+      });
+      return true;
+    } catch (err) {
+      console.error('Failed to relink track:', err);
+      return false;
+    }
   }, []);
 
   /**
@@ -248,10 +279,11 @@ export function useLibrary() {
   }, []);
 
   /**
-   * Delete track from library
+   * Delete track from library and storage
    */
   const deleteTrack = useCallback(async (trackId: string) => {
     await defaultRepository.deleteTrack(trackId);
+    await idbDeleteAudioFile(trackId).catch(console.error);
     setTracks((prev) => prev.filter((t) => t.id !== trackId));
     // Also remove from any playlists containing it
     setPlaylists((prev) =>
@@ -412,6 +444,7 @@ export function useLibrary() {
     addTrackToPlaylist,
     removeTrackFromPlaylist,
     analyzeTrackAudio,
+    relinkTrack,
     reloadData,
   };
 }

@@ -203,21 +203,17 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             </div>
           )}
 
-          {/* Architecture notice: Browser Preview vs Native Tauri 2 Linux Packaging */}
+          {/* Architecture notice: Persistent Storage & Android SAF */}
           <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-xs text-neutral-400 space-y-2">
             <div className="flex items-center gap-2 text-neutral-200 font-semibold">
               <HardDrive size={15} className="text-brand-400" />
-              <span>Storage & Architecture Strategy</span>
+              <span>Storage & Persistence</span>
             </div>
             <p className="leading-relaxed">
-              • <strong className="text-neutral-200">Current Web Preview:</strong> Files are read
-              locally and decoded entirely within your browser memory. Metadata is stored in
-              IndexedDB.
+              • <strong className="text-neutral-200">Persistent Local Storage:</strong> Audio files and metadata are stored securely in local IndexedDB. Your library and songs remain fully playable across reloads, restarts, and app upgrades.
             </p>
             <p className="leading-relaxed">
-              • <strong className="text-neutral-200">Native Linux Desktop (Tauri 2):</strong> When
-              packaged with Tauri 2, the app connects directly to the Linux filesystem via approved
-              system dialogs and SQLite storage, preserving persistent paths across restarts.
+              • <strong className="text-neutral-200">Recursive Folder Import:</strong> Automatically scans nested directories and imports supported audio files with album artwork, BPM, and musical key detection.
             </p>
           </div>
         </div>

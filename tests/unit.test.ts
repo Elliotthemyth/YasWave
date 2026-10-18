@@ -77,6 +77,34 @@ describe('LRC Parser and Synchronizer', () => {
     // With negative offset -1s: at 4.0s (adjusted 5.0s) -> line 2
     expect(getActiveLyricIndex(doc.lines, 4.0, -1.0)).toBe(1);
   });
+
+  it('splits multilingual lines into tokens preserving Persian and English words', async () => {
+    const { splitLineIntoTokens, formatLrcDocument } = await import('../src/services/lyrics/lrcParser');
+    const englishTokens = splitLineIntoTokens('Hello world again');
+    expect(englishTokens).toEqual(['Hello', 'world', 'again']);
+
+    const persianTokens = splitLineIntoTokens('در ژرفای سکوت شب');
+    expect(persianTokens).toEqual(['در', 'ژرفای', 'سکوت', 'شب']);
+
+    // Enhanced LRC formatting test
+    const testLines = [
+      {
+        id: '1',
+        time: 5.5,
+        text: 'Hello world',
+        words: [
+          { word: 'Hello', time: 5.5, duration: 0.5 },
+          { word: 'world', time: 6.0, duration: 0.5 },
+        ],
+      },
+    ];
+
+    const enhancedOutput = formatLrcDocument(testLines, { title: 'Test' }, { includeWordTags: true });
+    expect(enhancedOutput).toContain('[00:05.50] <00:05.50> Hello <00:06.00> world');
+
+    const standardOutput = formatLrcDocument(testLines, { title: 'Test' }, { includeWordTags: false });
+    expect(standardOutput).toContain('[00:05.50] Hello world');
+  });
 });
 
 describe('Lyrics Candidate Scoring and Verification', () => {
