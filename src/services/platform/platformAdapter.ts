@@ -67,11 +67,14 @@ export class SystemMediaSessionAdapter {
     try {
       const artwork: MediaImage[] = [];
       if (track.coverArtUrl) {
-        artwork.push({
-          src: track.coverArtUrl,
-          sizes: '512x512',
-          type: 'image/jpeg',
-        });
+        // Provide standard responsive icons for Android notification & lock screen
+        for (const size of ['96x96', '128x128', '192x192', '256x256', '384x384', '512x512']) {
+          artwork.push({
+            src: track.coverArtUrl,
+            sizes: size,
+            type: 'image/jpeg',
+          });
+        }
       }
 
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -89,8 +92,25 @@ export class SystemMediaSessionAdapter {
     if (!this.isSupported) return;
     try {
       navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
-    } catch (e) {
+    } catch {
       // Ignore
+    }
+  }
+
+  public setPositionState(details: { duration: number; playbackRate?: number; position: number }): void {
+    if (!this.isSupported || typeof navigator.mediaSession.setPositionState !== 'function') return;
+    try {
+      const dur = Math.max(0, details.duration || 0);
+      if (dur > 0 && isFinite(dur)) {
+        const pos = Math.max(0, Math.min(details.position || 0, dur));
+        navigator.mediaSession.setPositionState({
+          duration: dur,
+          playbackRate: details.playbackRate || 1.0,
+          position: pos,
+        });
+      }
+    } catch {
+      // Ignore transition states
     }
   }
 
@@ -100,6 +120,7 @@ export class SystemMediaSessionAdapter {
     onNext: () => void;
     onPrevious: () => void;
     onSeek?: (seconds: number) => void;
+    onSeekRelative?: (deltaSeconds: number) => void;
   }): void {
     if (!this.isSupported) return;
 
@@ -108,12 +129,24 @@ export class SystemMediaSessionAdapter {
       navigator.mediaSession.setActionHandler('pause', () => handlers.onPause());
       navigator.mediaSession.setActionHandler('nexttrack', () => handlers.onNext());
       navigator.mediaSession.setActionHandler('previoustrack', () => handlers.onPrevious());
+      navigator.mediaSession.setActionHandler('stop', () => handlers.onPause());
 
       if (handlers.onSeek) {
         navigator.mediaSession.setActionHandler('seekto', (details) => {
           if (details.seekTime !== undefined) {
             handlers.onSeek!(details.seekTime);
           }
+        });
+      }
+
+      if (handlers.onSeekRelative) {
+        navigator.mediaSession.setActionHandler('seekforward', (details) => {
+          const skipTime = details.seekOffset || 10;
+          handlers.onSeekRelative!(skipTime);
+        });
+        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+          const skipTime = details.seekOffset || 10;
+          handlers.onSeekRelative!(-skipTime);
         });
       }
     } catch (e) {

@@ -57,10 +57,19 @@ export class BrowserFileAdapter implements FileAdapter {
     return new Promise((resolve) => {
       const input = document.createElement('input');
       input.type = 'file';
+      input.style.display = 'none';
       input.multiple = options.multiple ?? true;
       input.accept = options.accept || APP_CONFIG.supportedExtensions.join(',') + ',' + APP_CONFIG.supportedMimeTypes.join(',');
+      document.body.appendChild(input);
+
+      const cleanup = () => {
+        if (input.parentNode) {
+          input.parentNode.removeChild(input);
+        }
+      };
 
       input.onchange = () => {
+        cleanup();
         if (!input.files || input.files.length === 0) {
           resolve([]);
           return;
@@ -70,6 +79,7 @@ export class BrowserFileAdapter implements FileAdapter {
       };
 
       input.oncancel = () => {
+        cleanup();
         resolve([]);
       };
 
@@ -123,16 +133,28 @@ export class BrowserFileAdapter implements FileAdapter {
       }
     }
 
-    // 2. Standard webkitdirectory input fallback
+    // 2. Standard webkitdirectory input fallback (adjusted for Android document provider and iframe DOM requirements)
     return new Promise((resolve) => {
       const input = document.createElement('input');
       input.type = 'file';
-      input.setAttribute('webkitdirectory', '');
-      input.setAttribute('directory', '');
+      input.style.display = 'none';
+      const isAndroid = typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent);
+      if (!isAndroid) {
+        input.setAttribute('webkitdirectory', '');
+        input.setAttribute('directory', '');
+      }
       input.multiple = true;
       input.accept = APP_CONFIG.supportedExtensions.join(',') + ',' + APP_CONFIG.supportedMimeTypes.join(',');
+      document.body.appendChild(input);
+
+      const cleanup = () => {
+        if (input.parentNode) {
+          input.parentNode.removeChild(input);
+        }
+      };
 
       input.onchange = () => {
+        cleanup();
         if (!input.files || input.files.length === 0) {
           resolve([]);
           return;
@@ -143,6 +165,7 @@ export class BrowserFileAdapter implements FileAdapter {
       };
 
       input.oncancel = () => {
+        cleanup();
         resolve([]);
       };
 

@@ -168,6 +168,13 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
     }
   }, [currentTrack, isSearchingAuto, onUpdateTrackLyrics]);
 
+  // Automatically trigger LRCLIB lyrics discovery when opening modal for a track without lyrics
+  useEffect(() => {
+    if (isOpen && currentTrack && !currentTrack.lyrics && !isSearchingAuto && !autoSearchNotice) {
+      handleAutoDiscoverLyrics();
+    }
+  }, [isOpen, currentTrack?.id, currentTrack?.lyrics, isSearchingAuto, autoSearchNotice, handleAutoDiscoverLyrics]);
+
   // If track has lyrics but missing Persian translations, generate them
   const handleGeneratePersianTranslations = useCallback(async () => {
     if (!lyricsDoc || !currentTrack) return;

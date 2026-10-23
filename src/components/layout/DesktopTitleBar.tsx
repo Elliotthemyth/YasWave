@@ -16,6 +16,7 @@ export const DesktopTitleBar: React.FC<DesktopTitleBarProps> = ({
   onOpenShortcuts,
 }) => {
   const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+  if (!isTauri) return null;
 
   return (
     <div

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useAudioEngine } from './hooks/useAudioEngine';
 import { useLibrary } from './hooks/useLibrary';
 import { useTheme } from './hooks/useTheme';
@@ -29,6 +29,7 @@ import { KeyboardShortcutsModal } from './components/modals/KeyboardShortcutsMod
 import { LyricsSearchModal } from './components/lyrics/LyricsSearchModal';
 import { ContextMenu, ContextMenuProps } from './components/common/ContextMenu';
 import { Playlist, SmartPlaylistConfig } from './types/playlist';
+import { backButtonManager } from './services/platform/backButtonManager';
 
 // Views
 import { HomeView } from './components/views/HomeView';
@@ -214,6 +215,145 @@ export default function App() {
     setEditingLyricsTrack(null);
     setContextMenu(null);
   }, []);
+
+  // Centralized Android & System Back Button handling
+  useEffect(() => {
+    backButtonManager.setNavigationFallback(() => {
+      if (historyIndex > 0) {
+        handleNavigateBack();
+        return true;
+      }
+      return false;
+    });
+  }, [historyIndex, handleNavigateBack]);
+
+  useEffect(() => {
+    if (contextMenu) {
+      return backButtonManager.registerHandler('contextMenu', () => {
+        setContextMenu(null);
+        return true;
+      });
+    }
+  }, [contextMenu]);
+
+  useEffect(() => {
+    if (isSyncStudioOpen) {
+      return backButtonManager.registerHandler('syncStudio', () => {
+        setIsSyncStudioOpen(false);
+        setSyncStudioInitialLyrics(undefined);
+        return true;
+      });
+    }
+  }, [isSyncStudioOpen]);
+
+  useEffect(() => {
+    if (isLyricsDiscoveryOpen) {
+      return backButtonManager.registerHandler('lyricsDiscovery', () => {
+        setIsLyricsDiscoveryOpen(false);
+        return true;
+      });
+    }
+  }, [isLyricsDiscoveryOpen]);
+
+  useEffect(() => {
+    if (isLyricsSearchModalOpen) {
+      return backButtonManager.registerHandler('lyricsSearch', () => {
+        setIsLyricsSearchModalOpen(false);
+        return true;
+      });
+    }
+  }, [isLyricsSearchModalOpen]);
+
+  useEffect(() => {
+    if (isMobilePlayerExpanded) {
+      return backButtonManager.registerHandler('mobileFullPlayer', () => {
+        setIsMobilePlayerExpanded(false);
+        return true;
+      });
+    }
+  }, [isMobilePlayerExpanded]);
+
+  useEffect(() => {
+    if (isLyricsOpen) {
+      return backButtonManager.registerHandler('lyricsModal', () => {
+        setIsLyricsOpen(false);
+        return true;
+      });
+    }
+  }, [isLyricsOpen]);
+
+  useEffect(() => {
+    if (isVisualizerOpen) {
+      return backButtonManager.registerHandler('visualizer', () => {
+        setIsVisualizerOpen(false);
+        return true;
+      });
+    }
+  }, [isVisualizerOpen]);
+
+  useEffect(() => {
+    if (isQueueOpen) {
+      return backButtonManager.registerHandler('queueDrawer', () => {
+        setIsQueueOpen(false);
+        return true;
+      });
+    }
+  }, [isQueueOpen]);
+
+  useEffect(() => {
+    if (isImportModalOpen) {
+      return backButtonManager.registerHandler('importModal', () => {
+        setIsImportModalOpen(false);
+        return true;
+      });
+    }
+  }, [isImportModalOpen]);
+
+  useEffect(() => {
+    if (isCreatePlaylistOpen) {
+      return backButtonManager.registerHandler('createPlaylist', () => {
+        setIsCreatePlaylistOpen(false);
+        return true;
+      });
+    }
+  }, [isCreatePlaylistOpen]);
+
+  useEffect(() => {
+    if (isSmartPlaylistModalOpen) {
+      return backButtonManager.registerHandler('smartPlaylist', () => {
+        setIsSmartPlaylistModalOpen(false);
+        setEditingSmartPlaylist(null);
+        return true;
+      });
+    }
+  }, [isSmartPlaylistModalOpen]);
+
+  useEffect(() => {
+    if (editingTrack) {
+      return backButtonManager.registerHandler('editTrack', () => {
+        setEditingTrack(null);
+        return true;
+      });
+    }
+  }, [editingTrack]);
+
+  useEffect(() => {
+    if (editingLyricsTrack) {
+      return backButtonManager.registerHandler('editLyrics', () => {
+        setEditingLyricsTrack(null);
+        return true;
+      });
+    }
+  }, [editingLyricsTrack]);
+
+  useEffect(() => {
+    if (isShortcutsModalOpen) {
+      return backButtonManager.registerHandler('shortcuts', () => {
+        setIsShortcutsModalOpen(false);
+        return true;
+      });
+    }
+  }, [isShortcutsModalOpen]);
 
   // Smart playlist saving / updating
   const handleSaveSmartPlaylist = useCallback(

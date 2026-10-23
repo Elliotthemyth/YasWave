@@ -349,3 +349,228 @@ describe('Smart Playlist Filtering by BPM and Key', () => {
     expect(evaluateSmartRule(trackHighBpm, ruleCamelot)).toBe(false);
   });
 });
+
+describe('Metadata & File Persistence Validation', () => {
+  it('correctly handles filename parsing and strips leading track numbers', () => {
+    const parsed1 = cleanFileNameToTitle('01 - Daft Punk - One More Time.mp3');
+    expect(parsed1.artist).toBe('Daft Punk');
+    expect(parsed1.title).toBe('One More Time');
+
+    const parsed2 = cleanFileNameToTitle('05. Moonlight Sonata.flac');
+    expect(parsed2.artist).toBe('Unknown Artist');
+    expect(parsed2.title).toBe('Moonlight Sonata');
+
+    const parsed3 = cleanFileNameToTitle('Artist_Name - Track_Title.wav');
+    expect(parsed3.artist).toBe('Artist Name');
+    expect(parsed3.title).toBe('Track Title');
+  });
+
+  it('validates supported audio file types in BrowserFileAdapter', async () => {
+    const { browserFileAdapter } = await import('../src/services/filesystem/browserFileAdapter');
+    const dummyMp3 = new File([''], 'song.mp3', { type: 'audio/mpeg' });
+    const dummyFlac = new File([''], 'song.flac', { type: 'audio/flac' });
+    const dummyWav = new File([''], 'song.wav', { type: 'audio/wav' });
+    const dummyTxt = new File([''], 'notes.txt', { type: 'text/plain' });
+
+    expect(browserFileAdapter.isAudioFile(dummyMp3)).toBe(true);
+    expect(browserFileAdapter.isAudioFile(dummyFlac)).toBe(true);
+    expect(browserFileAdapter.isAudioFile(dummyWav)).toBe(true);
+    expect(browserFileAdapter.isAudioFile(dummyTxt)).toBe(false);
+  });
+
+  it('provides searchCandidates on lrclibProvider interface', async () => {
+    expect(typeof lrclibProvider.searchCandidates).toBe('function');
+  });
+});
+
+describe('Android Core Systems & Integration', () => {
+  it('extracts embedded lyrics from common.lyrics and ID3 USLT native frames', async () => {
+    const { extractEmbeddedLyrics } = await import('../src/services/metadata/metadataParser');
+
+    // Case 1: common.lyrics string array
+    const mockCommonMetadata: any = {
+      common: {
+        lyrics: ['[00:01.00] First lyric line', '[00:05.00] Second lyric line'],
+      },
+    };
+    expect(extractEmbeddedLyrics(mockCommonMetadata)).toBe(
+      '[00:01.00] First lyric line\n[00:05.00] Second lyric line'
+    );
+
+    // Case 2: native ID3v2 USLT frame
+    const mockNativeMetadata: any = {
+      common: {},
+      native: {
+        'ID3v2.3': [
+          {
+            id: 'USLT',
+            value: {
+              language: 'eng',
+              description: '',
+              text: 'Unsynchronized lyric text from USLT frame',
+            },
+          },
+        ],
+      },
+    };
+    expect(extractEmbeddedLyrics(mockNativeMetadata)).toBe(
+      'Unsynchronized lyric text from USLT frame'
+    );
+
+    // Case 3: Empty metadata
+    const mockEmptyMetadata: any = { common: {} };
+    expect(extractEmbeddedLyrics(mockEmptyMetadata)).toBeUndefined();
+  });
+
+  it('cleans search query for high-accuracy LRCLIB queries', async () => {
+    const { cleanSearchQuery } = await import('../src/services/lyrics/lrclibProvider');
+
+    expect(cleanSearchQuery('One More Time (Official Video)', 'Daft Punk')).toBe(
+      'Daft Punk One More Time'
+    );
+    expect(cleanSearchQuery('Song Title [Remastered 2021]', 'Artist (feat. Guest)')).toBe(
+      'Artist Song Title'
+    );
+    expect(cleanSearchQuery('My Song - Single Version', 'Unknown Artist')).toBe(
+      'My Song'
+    );
+  });
+
+  it('manages back button stack with LIFO order and fallback to navigation', async () => {
+    const { backButtonManager } = await import('../src/services/platform/backButtonManager');
+
+    let modalClosed = false;
+    let overlayClosed = false;
+    let navigationTriggered = false;
+
+    backButtonManager.setNavigationFallback(() => {
+      navigationTriggered = true;
+      return true;
+    });
+
+    const unregOverlay = backButtonManager.registerHandler('overlay', () => {
+      overlayClosed = true;
+      return true;
+    });
+
+    const unregModal = backButtonManager.registerHandler('modal', () => {
+      modalClosed = true;
+      return true;
+    });
+
+    // 1st back press should close the topmost 'modal'
+    const step1 = backButtonManager.triggerBack();
+    expect(step1).toBe(true);
+    expect(modalClosed).toBe(true);
+    expect(overlayClosed).toBe(false);
+
+    // 2nd back press should close the 'overlay'
+    const step2 = backButtonManager.triggerBack();
+    expect(step2).toBe(true);
+    expect(overlayClosed).toBe(true);
+
+    // 3rd back press (no modals open) should trigger navigation fallback
+    const step3 = backButtonManager.triggerBack();
+    expect(step3).toBe(true);
+    expect(navigationTriggered).toBe(true);
+
+    unregModal();
+    unregOverlay();
+  });
+
+  it('updates currentTrack in audioEngine and synchronizes queue state', async () => {
+    const { audioEngine } = await import('../src/services/audio/audioEngine');
+
+    const sampleTrack: any = {
+      id: 'test-track-1',
+      title: 'Original Title',
+      artist: 'Original Artist',
+      album: 'Original Album',
+      duration: 120,
+      fileName: 'test.mp3',
+      fileSize: 1000,
+      fileType: 'audio/mpeg',
+      dateAdded: Date.now(),
+      playCount: 0,
+      isFavorite: false,
+      sourceType: 'browser_file',
+    };
+
+    await audioEngine.setQueue([sampleTrack], 0, false);
+    expect(audioEngine.getState().currentTrack?.title).toBe('Original Title');
+
+    // Update with newly discovered lyrics
+    audioEngine.updateCurrentTrack('test-track-1', {
+      lyrics: '[00:01.00] New lyric',
+      lyricsProvider: 'LRCLIB',
+    });
+
+    const updated = audioEngine.getState().currentTrack;
+    expect(updated?.lyrics).toBe('[00:01.00] New lyric');
+    expect(updated?.lyricsProvider).toBe('LRCLIB');
+    expect(audioEngine.getQueueState().queue[0].lyrics).toBe('[00:01.00] New lyric');
+  });
+
+  it('records, collects, and exports metadata diagnostics in dev mode without exposing audio binary data', async () => {
+    const {
+      recordMetadataDiagnostic,
+      getMetadataDiagnostics,
+      clearMetadataDiagnostics,
+      exportDiagnosticsJson,
+    } = await import('../src/services/metadata/metadataDiagnostics');
+
+    clearMetadataDiagnostics();
+    expect(getMetadataDiagnostics().length).toBe(0);
+
+    recordMetadataDiagnostic({
+      timestamp: Date.now(),
+      fileName: '04 - Track Four.mp3',
+      fileExtension: '.mp3',
+      fileSize: 4500123,
+      fileType: 'audio/mpeg',
+      common: {
+        artist: '4',
+        artists: ['4'],
+        albumartist: undefined,
+        title: 'Track Four',
+        album: 'Album Four',
+        track: { no: 4, of: 10 },
+        genre: ['Disco'],
+        year: 2024,
+      },
+      nativeFormatTypes: ['ID3v2.3'],
+      relevantFrames: {
+        'ID3v2.3:TRCK': '4',
+        'ID3v2.3:TCON': '4',
+        'ID3v2.3:TPE1': '4',
+      },
+      allNativeFramesSummary: {
+        'ID3v2.3': [
+          { id: 'TRCK', value: '4' },
+          { id: 'TCON', value: '4' },
+          { id: 'TPE1', value: '4' },
+        ],
+      },
+      finalResolvedArtist: '4',
+      finalResolvedTitle: 'Track Four',
+    });
+
+    const entries = getMetadataDiagnostics();
+    expect(entries.length).toBe(1);
+    expect(entries[0].fileName).toBe('04 - Track Four.mp3');
+    expect(entries[0].common.artist).toBe('4');
+    expect(entries[0].relevantFrames['ID3v2.3:TRCK']).toBe('4');
+
+    const json = exportDiagnosticsJson();
+    expect(json).toContain('"fileName": "04 - Track Four.mp3"');
+    expect(json).toContain('"finalResolvedArtist": "4"');
+    // Ensure no audio binary data or blob URLs exist in the export
+    expect(json).not.toContain('blob:');
+    expect(json).not.toContain('ArrayBuffer');
+
+    clearMetadataDiagnostics();
+    expect(getMetadataDiagnostics().length).toBe(0);
+  });
+});
+
+

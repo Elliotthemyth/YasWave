@@ -14,6 +14,8 @@ export interface TrackMetadata {
   bpm?: number; // Beats Per Minute
   key?: string; // e.g. 'C Major', 'A Minor'
   keyCamelot?: string; // e.g. '8B', '8A'
+  lyrics?: string; // Embedded or fetched LRC / plain text
+  lyricsProvider?: string; // 'embedded' | 'LRCLIB' | 'manual' | 'local'
 }
 
 export interface Track extends TrackMetadata {

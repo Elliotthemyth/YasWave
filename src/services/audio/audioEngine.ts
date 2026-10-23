@@ -129,6 +129,7 @@ export class AudioEngine {
       onNext: () => this.playNext(),
       onPrevious: () => this.playPrevious(),
       onSeek: (seconds) => this.seek(seconds),
+      onSeekRelative: (delta) => this.seekRelative(delta),
     });
 
     this.audio.addEventListener('play', () => {
@@ -140,9 +141,16 @@ export class AudioEngine {
     });
 
     this.audio.addEventListener('timeupdate', () => {
+      const pos = this.audio.currentTime;
+      const dur = this.audio.duration && !isNaN(this.audio.duration) ? this.audio.duration : this.state.duration;
       this.updateState({
-        currentTime: this.audio.currentTime,
-        duration: this.audio.duration && !isNaN(this.audio.duration) ? this.audio.duration : this.state.duration,
+        currentTime: pos,
+        duration: dur,
+      });
+      systemMediaSession.setPositionState({
+        duration: dur,
+        position: pos,
+        playbackRate: this.state.playbackRate,
       });
     });
 
@@ -151,6 +159,11 @@ export class AudioEngine {
       this.updateState({
         duration: dur,
         isLoading: false,
+      });
+      systemMediaSession.setPositionState({
+        duration: dur,
+        position: this.audio.currentTime,
+        playbackRate: this.state.playbackRate,
       });
     });
 
@@ -548,6 +561,7 @@ export class AudioEngine {
       currentTime: 0,
       duration: track.duration || 0,
     });
+    systemMediaSession.updateMetadata(track);
 
     const adapter = getActiveFileAdapter();
 
@@ -574,6 +588,21 @@ export class AudioEngine {
         isPlaying: false,
         error: errorMessage,
       });
+    }
+  }
+
+  /**
+   * Synchronize updates (e.g. newly fetched lyrics or edited tags) to the active track
+   * and update active queue & system media notification in real time.
+   */
+  public updateCurrentTrack(trackId: string, updates: Partial<Track>): void {
+    if (this.state.currentTrack && this.state.currentTrack.id === trackId) {
+      const updated = { ...this.state.currentTrack, ...updates };
+      this.updateState({ currentTrack: updated });
+      if (this.queueState.currentIndex >= 0 && this.queueState.currentIndex < this.queueState.queue.length) {
+        this.queueState.queue[this.queueState.currentIndex] = updated;
+      }
+      systemMediaSession.updateMetadata(updated);
     }
   }
 

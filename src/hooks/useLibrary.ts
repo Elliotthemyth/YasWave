@@ -7,6 +7,7 @@ import { extractMetadata } from '../services/metadata/metadataParser';
 import { browserFileAdapter } from '../services/filesystem/browserFileAdapter';
 import { calculateBpmAndKeyFromFile } from '../services/audio/audioAnalyzer';
 import { idbDeleteAudioFile } from '../services/storage/indexedDb';
+import { audioEngine } from '../services/audio/audioEngine';
 
 export function useLibrary() {
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -161,6 +162,8 @@ export function useLibrary() {
           playCount: 0,
           isFavorite: false,
           sourceType: 'browser_file',
+          lyrics: metadata.lyrics,
+          lyricsProvider: metadata.lyricsProvider,
           lyricsOffset: 0,
         };
 
@@ -218,6 +221,9 @@ export function useLibrary() {
    * Update track metadata
    */
   const updateTrack = useCallback(async (trackId: string, updates: TrackUpdateInput) => {
+    // Keep active playback audio engine state & system media notification synchronized immediately
+    audioEngine.updateCurrentTrack(trackId, updates);
+
     setTracks((prev) => {
       const target = prev.find((t) => t.id === trackId);
       if (!target) return prev;

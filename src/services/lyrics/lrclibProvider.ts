@@ -4,6 +4,24 @@ import { calculateLyricsMatchScore } from './lyricsMatcher';
 const LRCLIB_BASE_URL = 'https://lrclib.net/api';
 const CLIENT_HEADER = 'YASWAVE/1.0.0 (Cross-Platform Music Player)';
 
+/**
+ * Clean up noisy search terms from track title (e.g. [Official Video], (Remastered 2021), feat., etc.)
+ * to maximize match probability on community lyrics databases.
+ */
+export function cleanSearchQuery(title: string, artist?: string): string {
+  const cleanTitle = (title || '')
+    .replace(/\s*[\(\[](?:official\s*(?:music\s*)?video|audio|lyrics?|hd|hq|remaster(?:ed)?(?:\s*\d{4})?|deluxe|bonus\s*track|feat\.|ft\.)[^\)\]]*[\)\]]/gi, '')
+    .replace(/\s*-(?:\s*remaster(?:ed)?|\s*single|\s*edit).*$/i, '')
+    .trim();
+
+  const cleanArtist = (artist || '')
+    .replace(/\s*[\(\[](?:feat\.|ft\.)[^\)\]]*[\)\]]/gi, '')
+    .replace(/^unknown artist$/i, '')
+    .trim();
+
+  return [cleanArtist, cleanTitle].filter(Boolean).join(' ');
+}
+
 export class LrclibProvider implements LyricsProvider {
   readonly name = 'LRCLIB';
 
@@ -68,9 +86,16 @@ export class LrclibProvider implements LyricsProvider {
       clearTimeout(timeoutId);
 
       if (response.status === 404) {
-        // Not found via direct /get -> try /search fallback
-        const searchFallback = await this.searchLyrics(`${artist} ${title}`, params);
-        if (searchFallback.length > 0 && searchFallback[0].matchScore >= 70) {
+        // Not found via direct /get -> try /search fallback with primary query
+        let searchFallback = await this.searchLyrics(`${artist} ${title}`, params);
+        if (searchFallback.length === 0) {
+          const cleaned = cleanSearchQuery(title, artist);
+          if (cleaned && cleaned !== `${artist} ${title}`) {
+            searchFallback = await this.searchLyrics(cleaned, params);
+          }
+        }
+
+        if (searchFallback.length > 0 && searchFallback[0].matchScore >= 60) {
           const topMatch = searchFallback[0];
           this.memoryCache.set(cacheKey, topMatch);
           return topMatch;
@@ -188,6 +213,28 @@ export class LrclibProvider implements LyricsProvider {
       console.warn('LRCLIB search error:', err);
       return [];
     }
+  }
+
+  /**
+   * Search candidates by title, artist, duration with clean fallback
+   */
+  async searchCandidates(params: {
+    title: string;
+    artist?: string;
+    album?: string;
+    duration?: number;
+  }): Promise<LyricsMatchResult[]> {
+    const rawQuery = [params.artist, params.title].filter(Boolean).join(' ');
+    let results = await this.searchLyrics(rawQuery, params);
+    
+    // If no direct results, retry with cleaned keywords (stripping feat, official video, remaster, etc.)
+    if (results.length === 0) {
+      const cleaned = cleanSearchQuery(params.title, params.artist);
+      if (cleaned && cleaned !== rawQuery) {
+        results = await this.searchLyrics(cleaned, params);
+      }
+    }
+    return results;
   }
 
   private normalizeResult(

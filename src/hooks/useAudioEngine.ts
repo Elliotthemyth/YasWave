@@ -39,6 +39,9 @@ export function useAudioEngine() {
   const removeFromQueue = useCallback((index: number) => audioEngine.removeFromQueue(index), []);
   const reorderQueue = useCallback((from: number, to: number) => audioEngine.reorderQueue(from, to), []);
   const clearQueue = useCallback(() => audioEngine.clearQueue(), []);
+  const updateCurrentTrack = useCallback((trackId: string, updates: Partial<Track>) => {
+    audioEngine.updateCurrentTrack(trackId, updates);
+  }, []);
 
   return {
     ...playbackState,
@@ -62,6 +65,7 @@ export function useAudioEngine() {
     removeFromQueue,
     reorderQueue,
     clearQueue,
+    updateCurrentTrack,
     audioEngine,
   };
 }

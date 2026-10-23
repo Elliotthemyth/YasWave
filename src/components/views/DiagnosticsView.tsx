@@ -22,7 +22,13 @@ import {
   calculateBpmFromChannelData,
   calculateKeyFromChannelData,
 } from '../../services/audio/audioAnalyzer';
-import { CheckCircle2, XCircle, Play, RefreshCw, Terminal } from 'lucide-react';
+import { CheckCircle2, XCircle, Play, RefreshCw, Terminal, Copy, Trash2, FileAudio, Check } from 'lucide-react';
+import {
+  getMetadataDiagnostics,
+  clearMetadataDiagnostics,
+  exportDiagnosticsJson,
+  MetadataDiagnosticEntry,
+} from '../../services/metadata/metadataDiagnostics';
 
 interface TestCaseResult {
   suite: string;
@@ -35,6 +41,39 @@ interface TestCaseResult {
 export const DiagnosticsView: React.FC = () => {
   const [results, setResults] = useState<TestCaseResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [metadataEntries, setMetadataEntries] = useState<MetadataDiagnosticEntry[]>([]);
+  const [copiedSuccess, setCopiedSuccess] = useState(false);
+
+  useEffect(() => {
+    setMetadataEntries(getMetadataDiagnostics());
+  }, []);
+
+  const handleRefreshMetadataLogs = () => {
+    setMetadataEntries(getMetadataDiagnostics());
+  };
+
+  const handleClearMetadataLogs = () => {
+    clearMetadataDiagnostics();
+    setMetadataEntries([]);
+  };
+
+  const handleCopyDiagnostics = async () => {
+    const json = exportDiagnosticsJson();
+    try {
+      await navigator.clipboard.writeText(json);
+      setCopiedSuccess(true);
+      setTimeout(() => setCopiedSuccess(false), 2000);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = json;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      setCopiedSuccess(true);
+      setTimeout(() => setCopiedSuccess(false), 2000);
+    }
+  };
 
   const runAllTests = () => {
     setIsRunning(true);
@@ -556,6 +595,145 @@ export const DiagnosticsView: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Audio Metadata Tag Diagnostics (Dev Only) */}
+      <div className="bg-neutral-900/40 rounded-xl border border-white/5 overflow-hidden">
+        <div className="px-5 py-3 border-b border-white/10 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileAudio size={16} className="text-amber-400" />
+            <div>
+              <h3 className="text-xs font-semibold text-neutral-300 uppercase tracking-wider">
+                Raw Audio Tag Diagnostics (Dev Only)
+              </h3>
+              <p className="text-[11px] text-neutral-400 mt-0.5">
+                Inspect raw ID3 frames (TPE1, TPE2, TCON, TRCK) and parsed fields to compare affected vs working tracks.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRefreshMetadataLogs}
+              className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-neutral-300 text-xs flex items-center gap-1.5 transition-colors"
+              title="Refresh Logs"
+            >
+              <RefreshCw size={13} />
+              <span>Refresh</span>
+            </button>
+
+            {metadataEntries.length > 0 && (
+              <>
+                <button
+                  onClick={handleClearMetadataLogs}
+                  className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-rose-400 text-xs flex items-center gap-1.5 transition-colors"
+                  title="Clear Captured Logs"
+                >
+                  <Trash2 size={13} />
+                  <span>Clear</span>
+                </button>
+
+                <button
+                  onClick={handleCopyDiagnostics}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors ${
+                    copiedSuccess
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-brand-500 hover:bg-brand-400 text-black'
+                  }`}
+                  title="Copy JSON to Clipboard"
+                >
+                  {copiedSuccess ? <Check size={14} /> : <Copy size={14} />}
+                  <span>{copiedSuccess ? 'Copied to Clipboard!' : 'Copy Diagnostic JSON'}</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {metadataEntries.length === 0 ? (
+          <div className="p-8 text-center">
+            <FileAudio size={32} className="mx-auto text-neutral-600 mb-2" />
+            <p className="text-sm font-medium text-neutral-300">No imported track tags recorded yet in this session</p>
+            <p className="text-xs text-neutral-500 max-w-md mx-auto mt-1">
+              Import one track that displays a numeric artist (e.g. &ldquo;4&rdquo;) and one track that displays correctly using &ldquo;Import Music&rdquo;. Their raw tags and frame mappings will be logged here.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-white/5 p-4 space-y-4">
+            {metadataEntries.map((entry, idx) => {
+              const isNumericArtist = /^\d+$/.test(entry.finalResolvedArtist);
+              return (
+                <div
+                  key={idx}
+                  className={`p-4 rounded-xl border ${
+                    isNumericArtist
+                      ? 'bg-amber-950/20 border-amber-500/30'
+                      : 'bg-neutral-900/60 border-white/5'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-2">
+                      <FileAudio size={18} className={isNumericArtist ? 'text-amber-400' : 'text-brand-400'} />
+                      <span className="font-semibold text-neutral-200 text-sm">{entry.fileName}</span>
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/5 text-neutral-400 border border-white/5">
+                        {entry.fileExtension} &bull; {(entry.fileSize / 1024).toFixed(1)} KB
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-neutral-400">Selected Artist:</span>
+                      <span
+                        className={`font-mono text-xs font-bold px-2.5 py-1 rounded-md border ${
+                          isNumericArtist
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                            : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                        }`}
+                      >
+                        &quot;{entry.finalResolvedArtist}&quot;
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 text-xs">
+                    {/* Common Tags */}
+                    <div className="bg-black/40 p-3 rounded-lg border border-white/5">
+                      <span className="text-[11px] uppercase font-bold text-neutral-400 block mb-1.5">
+                        parsed.common Tags
+                      </span>
+                      <div className="space-y-1 font-mono text-[11px]">
+                        <div><span className="text-neutral-500">artist:</span> <span className="text-neutral-200">{JSON.stringify(entry.common.artist)}</span></div>
+                        <div><span className="text-neutral-500">artists:</span> <span className="text-neutral-200">{JSON.stringify(entry.common.artists)}</span></div>
+                        <div><span className="text-neutral-500">albumartist:</span> <span className="text-neutral-200">{JSON.stringify(entry.common.albumartist)}</span></div>
+                        <div><span className="text-neutral-500">track:</span> <span className="text-neutral-200">{JSON.stringify(entry.common.track)}</span></div>
+                        <div><span className="text-neutral-500">genre:</span> <span className="text-neutral-200">{JSON.stringify(entry.common.genre)}</span></div>
+                        <div><span className="text-neutral-500">title:</span> <span className="text-neutral-200">{JSON.stringify(entry.common.title)}</span></div>
+                      </div>
+                    </div>
+
+                    {/* Relevant Native Frames */}
+                    <div className="bg-black/40 p-3 rounded-lg border border-white/5">
+                      <span className="text-[11px] uppercase font-bold text-neutral-400 block mb-1.5">
+                        Relevant Native Frames (TPE1, TPE2, TCON, TRCK)
+                      </span>
+                      {Object.keys(entry.relevantFrames).length > 0 ? (
+                        <div className="space-y-1 font-mono text-[11px]">
+                          {Object.entries(entry.relevantFrames).map(([frameKey, frameVal]) => (
+                            <div key={frameKey}>
+                              <span className="text-amber-400/90">{frameKey}:</span>{' '}
+                              <span className="text-neutral-200">{JSON.stringify(frameVal)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-neutral-500 italic text-[11px]">No matching native frames found</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
