@@ -300,11 +300,11 @@ export const LyricsModal: React.FC<LyricsModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-neutral-950/95 flex flex-col backdrop-blur-2xl animate-in fade-in duration-200 select-none"
+      className="fixed inset-0 z-50 bg-neutral-950 flex flex-col backdrop-blur-2xl animate-in fade-in duration-200 select-none pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]"
       onClick={(e) => e.stopPropagation()}
     >
       {/* Top Header */}
-      <header className="h-16 px-6 border-b border-white/10 flex items-center justify-between shrink-0 bg-neutral-950/60 z-20">
+      <header className="h-14 sm:h-16 px-3 sm:px-6 border-b border-white/10 flex items-center justify-between shrink-0 bg-neutral-950/90 z-20 gap-2">
         <div className="flex items-center gap-3">
           <div>
             <div className="flex items-center gap-2">

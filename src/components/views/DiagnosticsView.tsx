@@ -519,7 +519,7 @@ export const DiagnosticsView: React.FC = () => {
   const failedCount = results.filter((r) => !r.passed).length;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-6 select-none pb-24">
+    <div className="px-4 py-4 md:px-8 md:py-6 max-w-4xl mx-auto space-y-6 select-none pb-24">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Diagnostics & Tests</h1>

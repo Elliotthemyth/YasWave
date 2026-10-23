@@ -131,22 +131,7 @@ export class LrclibProvider implements LyricsProvider {
     }
   }
 
-  /**
-   * Search candidate matches for a specific track (used by the discovery modal).
-   */
-  async searchCandidates(params: {
-    title: string;
-    artist?: string;
-    duration?: number;
-  }): Promise<LyricsMatchResult[]> {
-    const { title, artist, duration } = params;
-    const query = [artist, title]
-      .filter((part): part is string => Boolean(part && part.trim()))
-      .join(' ')
-      .trim();
-    if (!query) return [];
-    return this.searchLyrics(query, { title, artist, duration });
-  }
+
 
   /**
    * Search multiple candidates using /api/search

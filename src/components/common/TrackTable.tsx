@@ -103,9 +103,34 @@ export const TrackTable: React.FC<TrackTableProps> = ({
 
   return (
     <div className="w-full">
-      {/* Table Header */}
+      {/* Mobile Quick Sort Controls (< 768px) */}
+      <div className="md:hidden flex items-center justify-between px-2 py-1 mb-2 text-xs text-neutral-400">
+        <span className="text-[11px] font-medium tracking-wide text-neutral-400">
+          {sortedTracks.length} tracks
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => handleSort('title')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+              sortField === 'title' ? 'bg-white/15 text-white' : 'text-neutral-400 hover:text-white'
+            }`}
+          >
+            Title {sortField === 'title' && (sortDir === 'asc' ? '↑' : '↓')}
+          </button>
+          <button
+            onClick={() => handleSort('artist')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+              sortField === 'artist' ? 'bg-white/15 text-white' : 'text-neutral-400 hover:text-white'
+            }`}
+          >
+            Artist {sortField === 'artist' && (sortDir === 'asc' ? '↑' : '↓')}
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Table Header (>= 768px) */}
       <div
-        className="grid items-center px-4 py-2 border-b border-white/10 text-xs font-medium text-neutral-400 select-none uppercase tracking-wider mb-1"
+        className="hidden md:grid items-center px-4 py-2 border-b border-white/10 text-xs font-medium text-neutral-400 select-none uppercase tracking-wider mb-1"
         style={{ gridTemplateColumns: gridColumns }}
       >
         <div className="pl-1">#</div>

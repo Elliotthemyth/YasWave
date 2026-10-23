@@ -3,7 +3,7 @@ import { Track, TrackUpdateInput } from '../types/track';
 import { Playlist } from '../types/playlist';
 import { defaultRepository } from '../services/storage/libraryRepository';
 import { DEMO_TRACKS } from '../config/defaultTracks';
-import { extractMetadata } from '../services/metadata/metadataParser';
+import { extractMetadata, reprocessTrackMetadata } from '../services/metadata/metadataParser';
 import { browserFileAdapter } from '../services/filesystem/browserFileAdapter';
 import { calculateBpmAndKeyFromFile } from '../services/audio/audioAnalyzer';
 import { idbDeleteAudioFile } from '../services/storage/indexedDb';

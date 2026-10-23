@@ -35,9 +35,17 @@ export const QueueDrawer: React.FC<QueueDrawerProps> = ({
 
   return (
     <div
-      className="fixed inset-y-0 right-0 z-40 w-80 md:w-96 bg-neutral-900/95 border-l border-white/10 shadow-2xl flex flex-col backdrop-blur-xl animate-in slide-in-from-right duration-200 select-none"
-      onClick={(e) => e.stopPropagation()}
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end md:justify-center md:items-end select-none animate-in fade-in duration-200"
+      onClick={onClose}
     >
+      <div
+        className="w-full md:w-96 max-h-[85vh] md:h-full bg-neutral-950 border-t md:border-t-0 md:border-l border-white/10 rounded-t-3xl md:rounded-none shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom md:slide-in-from-right duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Android drag handle for mobile */}
+        <div className="md:hidden flex justify-center pt-2.5 pb-1">
+          <div className="w-10 h-1 bg-white/20 rounded-full" />
+        </div>
       {/* Header */}
       <div className="h-14 px-4 border-b border-white/10 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
@@ -190,5 +198,6 @@ export const QueueDrawer: React.FC<QueueDrawerProps> = ({
         )}
       </div>
     </div>
+  </div>
   );
 };

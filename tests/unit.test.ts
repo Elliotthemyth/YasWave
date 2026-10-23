@@ -571,6 +571,100 @@ describe('Android Core Systems & Integration', () => {
     clearMetadataDiagnostics();
     expect(getMetadataDiagnostics().length).toBe(0);
   });
+
+  describe('Numeric Artist Tag Resolution (Regression Tests)', () => {
+    it('preserves valid legitimate non-numeric artist tags', async () => {
+      const { resolveArtistAndTitle } = await import('../src/services/metadata/metadataParser');
+      const result = resolveArtistAndTitle({
+        commonArtist: 'Pink Floyd',
+        fileName: '01. Time.mp3',
+        parsedTitle: 'Time',
+      });
+      expect(result.artist).toBe('Pink Floyd');
+      expect(result.title).toBe('Time');
+    });
+
+    it('falls back to common.artists if common.artist is numeric "4"', async () => {
+      const { resolveArtistAndTitle } = await import('../src/services/metadata/metadataParser');
+      const result = resolveArtistAndTitle({
+        commonArtist: '4',
+        commonArtists: ['4', 'Queen'],
+        fileName: '04 - Bohemian Rhapsody.mp3',
+        parsedTitle: 'Bohemian Rhapsody',
+        trackNumber: 4,
+      });
+      expect(result.artist).toBe('Queen');
+      expect(result.title).toBe('Bohemian Rhapsody');
+    });
+
+    it('falls back to albumartist if common.artist is a numeric track number "4"', async () => {
+      const { resolveArtistAndTitle } = await import('../src/services/metadata/metadataParser');
+      const result = resolveArtistAndTitle({
+        commonArtist: '4',
+        commonAlbumArtist: 'Daft Punk',
+        fileName: '04. One More Time.mp3',
+        parsedTitle: 'One More Time',
+        trackNumber: 4,
+      });
+      expect(result.artist).toBe('Daft Punk');
+      expect(result.title).toBe('One More Time');
+    });
+
+    it('recovers artist from native TPE2/ARTIST tags if common.artist is numeric', async () => {
+      const { resolveArtistAndTitle } = await import('../src/services/metadata/metadataParser');
+      const result = resolveArtistAndTitle({
+        commonArtist: '2',
+        nativeTags: {
+          'ID3v2.3': [
+            { id: 'TRCK', value: '2' },
+            { id: 'TCON', value: '2' },
+            { id: 'TPE2', value: 'Radiohead' },
+          ],
+        },
+        fileName: 'track_02.mp3',
+        parsedTitle: 'Karma Police',
+        trackNumber: 2,
+      });
+      expect(result.artist).toBe('Radiohead');
+      expect(result.title).toBe('Karma Police');
+    });
+
+    it('splits Artist - Title from title tag when common.artist is numeric', async () => {
+      const { resolveArtistAndTitle } = await import('../src/services/metadata/metadataParser');
+      const result = resolveArtistAndTitle({
+        commonArtist: '3',
+        fileName: 'track3.mp3',
+        parsedTitle: 'Eminem - Lose Yourself',
+        trackNumber: 3,
+      });
+      expect(result.artist).toBe('Eminem');
+      expect(result.title).toBe('Lose Yourself');
+    });
+
+    it('extracts artist from clean filename when common.artist is numeric', async () => {
+      const { resolveArtistAndTitle } = await import('../src/services/metadata/metadataParser');
+      const result = resolveArtistAndTitle({
+        commonArtist: '4',
+        fileName: '04 - The Beatles - Yesterday.mp3',
+        parsedTitle: 'Yesterday',
+        trackNumber: 4,
+      });
+      expect(result.artist).toBe('The Beatles');
+      expect(result.title).toBe('Yesterday');
+    });
+
+    it('falls back to Unknown Artist instead of displaying numeric "4" when no artist exists anywhere', async () => {
+      const { resolveArtistAndTitle } = await import('../src/services/metadata/metadataParser');
+      const result = resolveArtistAndTitle({
+        commonArtist: '4',
+        fileName: '04. Untitled.mp3',
+        parsedTitle: 'Untitled',
+        trackNumber: 4,
+      });
+      expect(result.artist).toBe('Unknown Artist');
+      expect(result.title).toBe('Untitled');
+    });
+  });
 });
 
 

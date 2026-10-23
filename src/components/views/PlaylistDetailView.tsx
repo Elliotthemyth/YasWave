@@ -102,21 +102,21 @@ export const PlaylistDetailView: React.FC<PlaylistDetailViewProps> = ({
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
+    <div className="px-4 py-4 md:px-8 md:py-6 max-w-5xl mx-auto space-y-4 select-none">
       {/* Playlist Hero */}
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 border-b border-white/10">
-        <div className="flex items-start md:items-center gap-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pb-4 border-b border-white/10">
+        <div className="flex items-center gap-4 min-w-0">
           <div
-            className={`w-32 h-32 rounded-2xl flex items-center justify-center shadow-2xl shrink-0 border ${
+            className={`w-20 h-20 sm:w-28 sm:h-28 rounded-2xl flex items-center justify-center shadow-xl shrink-0 border ${
               isSmart
                 ? 'bg-gradient-to-br from-brand-950 via-neutral-900 to-cyan-950 border-brand-500/30 text-brand-400'
                 : 'bg-gradient-to-br from-neutral-800 to-neutral-900 border-white/10 text-brand-400'
             }`}
           >
             {isSmart ? (
-              <Sparkles size={52} className="animate-pulse duration-1000" />
+              <Sparkles size={36} className="animate-pulse duration-1000" />
             ) : (
-              <ListMusic size={52} />
+              <ListMusic size={36} />
             )}
           </div>
 

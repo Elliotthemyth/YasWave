@@ -47,7 +47,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   ];
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-10 select-none pb-24">
+    <div className="px-4 py-4 md:px-8 md:py-6 max-w-4xl mx-auto space-y-6 select-none pb-24">
       <div>
         <h1 className="text-3xl font-extrabold text-white tracking-tight">Settings & Preferences</h1>
         <p className="text-xs text-neutral-400 mt-1">

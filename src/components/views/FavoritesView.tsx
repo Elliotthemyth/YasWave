@@ -29,9 +29,9 @@ export const FavoritesView: React.FC<FavoritesViewProps> = ({
   const totalDuration = favoriteTracks.reduce((acc, t) => acc + (t.duration || 0), 0);
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
+    <div className="px-4 py-4 md:px-8 md:py-6 max-w-5xl mx-auto space-y-4 select-none">
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pb-4 border-b border-white/10">
         <div className="flex items-center gap-5">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-900 flex items-center justify-center text-white shadow-xl border border-white/10">
             <Heart size={36} className="fill-white" />

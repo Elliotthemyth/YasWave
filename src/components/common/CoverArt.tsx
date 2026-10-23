@@ -8,7 +8,7 @@ interface CoverArtProps {
   artist?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
-  rounded?: 'sm' | 'md' | 'lg' | 'full';
+  rounded?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
 }
 
 const sizeClasses = {
@@ -23,6 +23,9 @@ const roundedClasses = {
   sm: 'rounded',
   md: 'rounded-md',
   lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  '3xl': 'rounded-3xl',
   full: 'rounded-full',
 };
 

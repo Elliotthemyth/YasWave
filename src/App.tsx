@@ -477,7 +477,7 @@ export default function App() {
           />
 
           {/* Scrollable View Container (with bottom padding for mobile mini-player & bottom nav) */}
-          <main className="flex-1 overflow-y-auto relative pb-32 md:pb-6">
+          <main className="flex-1 overflow-y-auto relative pb-36 md:pb-24">
             {activeView === 'home' && (
               <HomeView
                 tracks={tracks}
